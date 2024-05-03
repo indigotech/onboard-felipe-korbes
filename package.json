@@ -1,0 +1,30 @@
+{
+  "name": "onboarding-project",
+  "version": "1.0.0",
+  "description": "backend project using graphql",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indigotech/onboard-felipe-korbes.git"
+  },
+  "keywords": [
+    "project",
+    "graphql",
+    "backend"
+  ],
+  "author": "Felipe Korbes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/indigotech/onboard-felipe-korbes/issues"
+  },
+  "homepage": "https://github.com/indigotech/onboard-felipe-korbes#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "graphql": "^16.8.1",
+    "graphql-http": "^1.22.1",
+    "ruru": "^2.0.0-beta.11"
+  }
+}
