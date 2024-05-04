@@ -8,7 +8,7 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=123
-      - POSTGRES_DB=myDB
+      - POSTGRES_DB=mydb
 
   testdb:
     image: postgres:15.1
