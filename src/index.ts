@@ -1,55 +1,56 @@
-import { AppDataSource } from "./data-source";
-import { User } from "./entity/User";
+import { PrismaClient } from "@prisma/client";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import "reflect-metadata";
 
-// make a connection to the database and adds a user to it
-AppDataSource.initialize()
-  .then(async () => {
-    // console.log("Inserting a new user into the database...");
-    // const user = new User();
-    // user.firstName = "Felipe";
-    // user.lastName = "Korbes";
-    // user.age = 28;
-    // await AppDataSource.manager.save(user);
-    // console.log("Saved a new user with id: " + user.id);
+const prisma = new PrismaClient();
 
-    // console.log("Loading users from the database...");
-    // const users = await AppDataSource.manager.find(User);
-    // console.log("Loaded users: ", users);
+async function main() {
+  // await prisma.user.create({
+  //   data: {
+  //     name: "John Doe",
+  //     email: "john@prisma.io",
+  //     age: 33,
+  //   },
+  // });
 
-    // console.log(
-    //   "Here you can setup and run express / fastify / any other framework."
-    // );
-    const users = await AppDataSource.manager.find(User);
-    console.log(users);
+  // const post = await prisma.user.update({
+  //   where: { id: 1 },
+  //   data: { email: "felipe.korbes@taqtile.com.br" },
+  // });
+  // console.log(post);
 
-    const userFirstName = await AppDataSource.manager.findOneBy(User, {
-      firstName: "Felipe",
-    });
-    console.log(userFirstName.lastName);
-  })
-  .catch((error) => console.log(error));
+  const allUsers = await prisma.user.findMany({
+    where: {
+      name: {
+        contains: "Felipe",
+      },
+    },
+  });
+  console.log(allUsers);
+}
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
+main()
+.then(async () => {
+  await prisma.$disconnect();
+})
+.catch(async (e) => {
+  console.error(e);
+  await prisma.$disconnect();
+  process.exit(1);
+});
+
 const typeDefs = `#graphql
     type Query {
         hello: String
     }
 `;
 
-// Resolvers define how to fetch the types defined in your schema.
 const resolvers = {
   Query: {
     hello: () => "Hello world!",
   },
 };
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs,
   resolvers,
