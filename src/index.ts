@@ -19,3 +19,5 @@ const server = new ApolloServer({
     console.error("Error starting the server:", error);
   }
 })();
+
+export default server;
