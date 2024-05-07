@@ -7,9 +7,11 @@ In this repository you will find all files and information related the the on-bo
 The goal of the project thus far is to create and interact with a database using GraphQL and Prisma. So far, an entity called user has been created, which can be manipulated in any way using CRUD commands.
 
 ### Environment and Tools
+
 This project uses [TypeScript](https://www.typescriptlang.org/), [NodeJS](https://nodejs.org/en), [Apollo](https://www.apollographql.com/), [GraphQL](https://graphql.org/) and [Prisma](https://www.prisma.io/) with [PostgreSQL](https://www.postgresql.org/). NodeJS is being used for us to run JavaScript code in the backend as a means to create a server. Typescript is being used to make JavaScript a statically typed language, making development easier and more straightforward. Apollo and GraphQL are being used together to manage and test requests that can be made with the schemas created in the project. Lastly, Prisma and PostgreSQL are being used to manage the database, allowing us to use object relational mapping to create and handle our data.
 
-### Development  
+### Development
+
 So far, all the tools listed above have been implemented and tested in their most basic form. To run the code on your machine, you can follow the steps below.
 
 Before cloning the repository to your machine, make sure you have [Node.js](https://nodejs.org/en) and a PostgreSQL database running on your machine. In order to get an instance of a PostgreSQL running on your machine, you can use [Docker](https://www.docker.com/). If using Docker on Lnux, you can start it by running
@@ -18,9 +20,9 @@ Before cloning the repository to your machine, make sure you have [Node.js](http
 sudo systemctl start docker
 ```
 
-You can also try running ```docker run hello-world``` to check if everything is in order.
+You can also try running `docker run hello-world` to check if everything is in order.
 
-After checking that everything is okay, you can run the following command to start the PostgreSQL server.
+Before running any of the commands below, make sure that you cloned this respository and ran the command `npm install` in the root folder of the project. That will install all the packages necessary to run the project. After checking that everything is okay, you can run the following command to start the PostgreSQL server.
 
 ```plaintext
 docker compose up -d
@@ -38,20 +40,17 @@ Furthermore, by accessing your localhost:4000, you will find the Apollo interfac
 
 ```graphql
 query Greeting {
-    hello
+  hello
 }
 ```
 
-Which in turn will return ```Hello World!```. It's also possible to "create a new user", by typing in 
+Which in turn will return `Hello World!`. It's also possible to "create a new user", by typing in
 
 ```graphql
 mutation {
-  createUser(data: {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    password: "supersecretpassword",
-    birthDate: "01-01-1990"
-  }) {
+  createUser(
+    data: { name: "John Doe", email: "john.doe@example.com", password: "supersecretpassword", birthDate: "01-01-1990" }
+  ) {
     id
     name
     email
