@@ -49,7 +49,12 @@ Which in turn will return `Hello World!`. It's also possible to "create a new us
 ```graphql
 mutation {
   createUser(
-    data: { name: "John Doe", email: "john.doe@example.com", password: "supersecretpassword", birthDate: "01-01-1990" }
+    data: { 
+      name: "John Doe", 
+      email: "john.doe@example.com", 
+      password: "supersecretpassword", 
+      birthDate: "01-01-1990" 
+      }
   ) {
     id
     name
@@ -59,4 +64,4 @@ mutation {
 }
 ```
 
-This will run a mock test where we are receiving data from the client with their name, email, password and birthdate, which will return about the same thing, except for password, which will be substituted by ID.
+This will run and add a new user to the database. Just be sure to enter a valid email address and password.
