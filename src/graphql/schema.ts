@@ -22,9 +22,9 @@ export const typeDefs = `#graphql
   }
 `;
 
-export type UserInput = {
+export interface UserInput {
   name: string;
   email: string;
   password: string;
   birthDate: string;
-};
+}
