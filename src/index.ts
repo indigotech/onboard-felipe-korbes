@@ -7,22 +7,7 @@ import { resolvers } from "./graphql/resolvers";
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.user.create({
-    data: {
-      name: "Felipe Korbes",
-      email: "felipe@prisma.io",
-      age: 28
-    }
-  });
-
-  const allUsers = await prisma.user.findMany({
-    where: {
-      name: {
-        contains: "Felipe"
-      }
-    }
-  });
-  console.log(allUsers);
+  // Prisma queries go here
 }
 
 main()
