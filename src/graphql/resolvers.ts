@@ -1,5 +1,5 @@
 import { UserInput } from "./schema";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -23,18 +23,43 @@ export const resolvers = {
       info: any
     ) => {
       const { data } = args;
+      if (data.password.length < 6) {
+        throw new Error("Password must be at least 6 characters long");
+      }
+
+      const lettersAndNumbers: boolean =
+        /[a-zA-Z]/.test(data.password) && /[0-9]/.test(data.password);
+      if (!lettersAndNumbers) {
+        throw new Error(
+          "Password must contain at least one letter and one number"
+        );
+      }
+
       const hashedPassword = await hashPassword(data.password);
+      try {
+        const newUser = await prisma.user.create({
+          data: {
+            name: data.name,
+            password: hashedPassword,
+            email: data.email,
+            birthDate: data.birthDate
+          }
+        });
 
-      const newUser = await prisma.user.create({
-        data: {
-          name: data.name,
-          password: hashedPassword,
-          email: data.email,
-          birthDate: data.birthDate
+        return newUser;
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if (
+            error.message.includes(
+              "Unique constraint failed on the fields: (`email`)"
+            )
+          ) {
+            throw new Error("Email already exists");
+          }
         }
-      });
 
-      return newUser;
+        throw error;
+      }
     }
   }
 };
