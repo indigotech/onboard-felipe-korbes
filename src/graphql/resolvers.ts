@@ -16,23 +16,15 @@ export const resolvers = {
   },
 
   Mutation: {
-    createUser: async (
-      parent: any,
-      args: { data: UserInput },
-      context: any,
-      info: any
-    ) => {
+    createUser: async (parent: any, args: { data: UserInput }, context: any, info: any) => {
       const { data } = args;
       if (data.password.length < 6) {
         throw new Error("Password must be at least 6 characters long");
       }
 
-      const lettersAndNumbers: boolean =
-        /[a-zA-Z]/.test(data.password) && /[0-9]/.test(data.password);
+      const lettersAndNumbers: boolean = /[a-zA-Z]/.test(data.password) && /[0-9]/.test(data.password);
       if (!lettersAndNumbers) {
-        throw new Error(
-          "Password must contain at least one letter and one number"
-        );
+        throw new Error("Password must contain at least one letter and one number");
       }
 
       const hashedPassword = await hashPassword(data.password);
@@ -49,11 +41,7 @@ export const resolvers = {
         return newUser;
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (
-            error.message.includes(
-              "Unique constraint failed on the fields: (`email`)"
-            )
-          ) {
+          if (error.message.includes("Unique constraint failed on the fields: (`email`)")) {
             throw new Error("Email already exists");
           }
         }
