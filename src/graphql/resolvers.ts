@@ -16,12 +16,7 @@ export const resolvers = {
   },
 
   Mutation: {
-    createUser: async (
-      parent: any,
-      args: { data: UserInput },
-      context: any,
-      info: any
-    ) => {
+    createUser: async (parent: any, args: { data: UserInput }, context: any, info: any) => {
       const { data } = args;
       const hashedPassword = await hashPassword(data.password);
 
