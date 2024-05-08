@@ -41,8 +41,14 @@ export const resolvers = {
         return newUser;
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.message.includes("Unique constraint failed on the fields: (`email`)")) {
-            throw new Error("Email already exists");
+          const user = await prisma.user.findUnique({
+            where: {
+              email: data.email
+            }
+          });
+
+          if (user?.email == data.email) {
+            throw new Error("Email already taken!");
           }
         }
 
