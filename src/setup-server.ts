@@ -4,17 +4,18 @@ import { typeDefs } from "./graphql/schema";
 import { resolvers } from "./graphql/resolvers";
 
 export let server: ApolloServer;
+export let url: string;
 
 export async function setupServer() {
   console.log("Starting server setup");
-  const server = new ApolloServer({
+  server = new ApolloServer({
     typeDefs,
     resolvers
   });
-
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: parseInt(process.env.PORT ?? "4000") }
+  const { url: getUrl } = await startStandaloneServer(server, {
+    listen: { port: parseInt(process.env.PORT ?? "4002") }
   });
+  url = getUrl;
 
   console.log("Server setup complete");
   console.log(`Server ready at: ${url}`);
