@@ -20,7 +20,8 @@ describe("GraphQL Server Test", function () {
     assert.equal(response.data.data.hello, "Hello world!");
   });
 
-  it("Created a new user with a mutation", async function () {
+  it("Created a new user with a mutation, checked their existence and deleted it", async function () {
+    const usersBefore = await prisma.user.findMany();
     const response = await axios.post(url, {
       query: `
           mutation {
@@ -38,29 +39,33 @@ describe("GraphQL Server Test", function () {
           }
         `
     });
+    const usersAfter = await prisma.user.findMany();
 
-    expect(response.data).to.have.property("data");
-    expect(response.data.data).to.have.property("createUser");
-    expect(response.data.data.createUser).to.not.be.null;
-    expect(response.data.data.createUser.id).to.not.be.null;
-    assert.equal(response.data.data.createUser.name, "User Test");
-    assert.equal(response.data.data.createUser.email, "test@example.com");
-    assert.equal(response.data.data.createUser.birthDate, "01-01-2000");
-  });
+    const expectedUser = {
+      name: "User Test",
+      email: "test@example.com",
+      birthDate: "01-01-2000"
+    };
 
-  it("Found the newly created user", async function () {
     const createdUser = await prisma.user.findUnique({
       where: {
         email: "test@example.com"
       }
     });
+
     expect(createdUser).to.not.be.null;
     if (createdUser) {
       expect(createdUser.email).to.be.equal("test@example.com");
+      expect(createdUser.name).to.be.equal("User Test");
+      expect(createdUser.birthDate).to.be.equal("01-01-2000");
     }
-  });
+    expect(usersAfter.length).to.be.greaterThan(usersBefore.length);
+    expect({
+      name: response.data.data.createUser.name,
+      email: response.data.data.createUser.email,
+      birthDate: response.data.data.createUser.birthDate
+    }).to.be.deep.eq(expectedUser);
 
-  it("Deleted the newly created user", async function () {
     const deletedUser = await prisma.user.delete({
       where: {
         email: "test@example.com"
