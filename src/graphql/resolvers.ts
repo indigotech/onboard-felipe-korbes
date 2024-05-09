@@ -19,11 +19,7 @@ export const resolvers = {
     createUser: async (parent: any, args: { data: UserInput }, context: any, info: any) => {
       const { data } = args;
       if (data.password.length < 6) {
-        throw new CustomError(
-          400,
-          "Password must be at least 6 characters long",
-          "Prompt user for a new password"
-        );
+        throw new CustomError(400, "Password must be at least 6 characters long", "Prompt user for a new password");
       }
 
       const lettersAndNumbers: boolean = /[a-zA-Z]/.test(data.password) && /[0-9]/.test(data.password);
