@@ -12,13 +12,13 @@ This project uses [TypeScript](https://www.typescriptlang.org/), [NodeJS](https:
 ### Development  
 So far, all the tools listed above have been implemented and tested in their most basic form. To run the code on your machine, you can follow the steps below.
 
-Before cloning the repository to your machine, make sure you have [Node.js](https://nodejs.org/en) and a PostgreSQL database running on your machine. In order to get an instance of a PostgreSQL running on your machine, you can use [Docker](https://www.docker.com/). If using Docker on Lnux, you can start it by running
+Before cloning the repository to your machine, make sure you have [Node.js](https://nodejs.org/en) and a PostgreSQL database running on your machine. In order to get an instance of a PostgreSQL running on your machine, you can use [Docker](https://www.docker.com/). If using Docker on Linux, you can start it by running
 
 ```plaintext
 sudo systemctl start docker
 ```
 
-You can also try running ```docker run hello-world``` to check if everything is in order.
+You can also try running `docker run hello-world` to check if everything is in order.
 
 After checking that everything is okay, you can run the following command to start the PostgreSQL server.
 
@@ -26,31 +26,27 @@ After checking that everything is okay, you can run the following command to sta
 docker compose up -d
 ```
 
-If everything went well so far, you can then run
+If everything went well so far, you can setup your .env file. A .env.test has been provided, whose contents you can copy, change its credentials that are in docker-compose-yml file and add it to a .env file. If for whatever reason you wish to name your .env files to something else, don't forget the change the appropriate scrips in packages.json, otherwise the commands below will not work.
+
+Once you have you environments setup, you can run the command below
 
 ```plaintext
-npx ts-node src/index.ts
+npm start
 ```
 
-This command will start the Apollo server on port 4000 and will retrieve a list of all Users currently in the database and find any user with the name Felipe, which will be printed on the terminal. From here on out you can add, remove, update or find other users in the databasa as you see fit.
-
-Furthermore, by accessing your localhost:4000, you will find the Apollo interface to run queries, mutations and more. You can type in
+This command will start the Apollo server on port 4000. From here on out you can add other users in the database as you see fit using the Apollo Server on your browser throgh the mutation implemented in the resolvers. The query and mutation you can run are:
 
 ```graphql
 query Greeting {
     hello
 }
-```
 
-Which in turn will return ```Hello World!```. It's also possible to "create a new user", by typing in 
-
-```graphql
 mutation {
   createUser(data: {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    password: "supersecretpassword",
-    birthDate: "01-01-1990"
+    name: "New User",
+    email: "new@example.com",
+    password: "123abc",
+    birthDate: "01-01-2002"
   }) {
     id
     name
@@ -58,6 +54,15 @@ mutation {
     birthDate
   }
 }
+
 ```
 
-This will run a mock test where we are receiving data from the client with their name, email, password and birthdate, which will return about the same thing, except for password, which will be substituted by ID.
+Other useful commands are:
+
++ `npm run migrateServer` to apply the changes made do schema.prisma in the development server 
++ `npm run migrateTest` to apply the changes made do schema.prisma in the test server
++ `npm run startTest` to start the server with the test database
++ `npm run studioTest` to open prisma studio with the test database
++ `npx prisma studo` to open prisma studio with the development database 
++ `npm test` to run the tests
+
