@@ -1,9 +1,9 @@
 import { url } from "../src/setup-server";
 import { prisma } from "../src/setup-db";
 import { assert, expect } from "chai";
-import { loginUserMutation } from "./test-queries";
-import { hashPassword } from "../src/graphql/resolvers";
+import { loginUserMutation, verifyToken } from "./helpers/helpers";
 import axios from "axios";
+import { hashPassword } from "../src/graphql/helpers/helpers";
 
 describe("Login authentication tests", function () {
   it("Logged in successfully", async function () {
