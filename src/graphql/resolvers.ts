@@ -1,8 +1,14 @@
 import { UserInput, LoginInput } from "./schema";
-import { Prisma } from "@prisma/client";
 import { prisma } from "../setup-db";
 import bcrypt from "bcrypt";
-import { hasLettersAndNumbers, invalidEmail, isValidDate, isValidYear, passwordLenght } from "./error-handlers";
+import {
+  loginUser,
+  hasLettersAndNumbers,
+  isValidEmail,
+  isValidDate,
+  isValidYear,
+  passwordLenght
+} from "./error-handlers";
 
 const hashPassword = async (password: string) => {
   const saltRounds = 10;
@@ -23,41 +29,37 @@ export const resolvers = {
       hasLettersAndNumbers(data.password);
       isValidDate(data.birthDate);
       isValidYear(data.birthDate);
+      await isValidEmail(data.email);
 
       const hashedPassword = await hashPassword(data.password);
 
-      try {
-        const newUser = await prisma.user.create({
-          data: {
-            name: data.name,
-            password: hashedPassword,
-            email: data.email,
-            birthDate: data.birthDate
-          }
-        });
-
-        return newUser;
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          await invalidEmail(data.email);
+      const newUser = await prisma.user.create({
+        data: {
+          name: data.name,
+          password: hashedPassword,
+          email: data.email,
+          birthDate: data.birthDate
         }
+      });
 
-        throw error;
-      }
+      return newUser;
     },
 
     login: async (parent: any, args: { data: LoginInput }, context: any, info: any) => {
       const { data } = args;
-      const response = {
-        id: "37",
-        name: "Test Login",
-        email: "login@email.com",
-        birthDate: "01-01-2000"
+
+      const user = await loginUser(data.email, data.password);
+
+      const loggedUser = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        birthDate: user.birthDate
       };
       const token = "tokenTest";
 
       return {
-        user: response,
+        user: loggedUser,
         token: token
       };
     }
