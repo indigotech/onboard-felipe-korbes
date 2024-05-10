@@ -16,10 +16,11 @@ export async function setupServer() {
     formatError
   });
 
-  const { url } = await startStandaloneServer(server, {
+  const { url: getUrl } = await startStandaloneServer(server, {
     listen: { port: parseInt(process.env.PORT ?? "4002") }
   });
 
+  url = getUrl;
   console.log("Server setup complete");
   console.log(`Server ready at: ${url}`);
 }

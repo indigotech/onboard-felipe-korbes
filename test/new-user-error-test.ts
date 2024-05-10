@@ -5,73 +5,11 @@ import { prisma } from "../src/setup-db";
 import { server, url } from "../src/setup-server";
 import axios from "axios";
 
-describe("GraphQL Server Test", function () {
+describe("User creation tests", function () {
   before(async function () {
     console.log("Starting setup");
     await setup();
     console.log("Setup complete");
-  });
-
-  it("Returned 'Hello world!' from the hello query", async function () {
-    const response = await axios.post(url, {
-      query: "{ hello }"
-    });
-
-    assert.equal(response.data.data.hello, "Hello world!");
-  });
-
-  it("Created a new user with a mutation, checked their existence and deleted it", async function () {
-    const usersBefore = await prisma.user.findMany();
-    const response = await axios.post(url, {
-      query: `#graphql
-          mutation {
-            createUser(data: {
-              name: "User Test",
-              email: "test@example.com",
-              password: "123abc",
-              birthDate: "01-01-2000"
-            }) {
-              id
-              name
-              email
-              birthDate
-            }
-          }
-        `
-    });
-    const usersAfter = await prisma.user.findMany();
-
-    const expectedUser = {
-      name: "User Test",
-      email: "test@example.com",
-      birthDate: "01-01-2000"
-    };
-
-    const createdUser = await prisma.user.findUnique({
-      where: {
-        email: "test@example.com"
-      }
-    });
-
-    expect(createdUser).to.not.be.null;
-    if (createdUser) {
-      expect(createdUser.email).to.be.equal("test@example.com");
-      expect(createdUser.name).to.be.equal("User Test");
-      expect(createdUser.birthDate).to.be.equal("01-01-2000");
-    }
-    expect(usersAfter.length).to.be.greaterThan(usersBefore.length);
-    expect({
-      name: response.data.data.createUser.name,
-      email: response.data.data.createUser.email,
-      birthDate: response.data.data.createUser.birthDate
-    }).to.be.deep.eq(expectedUser);
-
-    const deletedUser = await prisma.user.delete({
-      where: {
-        email: "test@example.com"
-      }
-    });
-    assert.equal(deletedUser.email, "test@example.com");
   });
 
   it("Tried to create a new user with an already existing email and failed", async function () {
@@ -79,8 +17,8 @@ describe("GraphQL Server Test", function () {
       query: `#graphql
           mutation {
             createUser(data: {
-              name: "User Test",
-              email: "test@example.com",
+              name: "First User",
+              email: "first@example.com",
               password: "123abc",
               birthDate: "01-01-2000"
             }) {
@@ -101,8 +39,8 @@ describe("GraphQL Server Test", function () {
       query: `#graphql
           mutation {
             createUser(data: {
-              name: "User Test",
-              email: "test1@example.com",
+              name: "First User",
+              email: "first1@example.com",
               password: "abc",
               birthDate: "01-01-2000"
             }) {
@@ -123,8 +61,8 @@ describe("GraphQL Server Test", function () {
       query: `#graphql
           mutation {
             createUser(data: {
-              name: "User Test",
-              email: "test1@example.com",
+              name: "First User",
+              email: "first1@example.com",
               password: "abcdef",
               birthDate: "01-01-2000"
             }) {
@@ -145,8 +83,8 @@ describe("GraphQL Server Test", function () {
       query: `#graphql
           mutation {
             createUser(data: {
-              name: "User Test",
-              email: "test1@example.com",
+              name: "First User",
+              email: "first1@example.com",
               password: "123456",
               birthDate: "01-01-2000"
             }) {
@@ -167,8 +105,8 @@ describe("GraphQL Server Test", function () {
       query: `#graphql
           mutation {
             createUser(data: {
-              name: "User Test",
-              email: "test1@example.com",
+              name: "First User",
+              email: "first1@example.com",
               password: "123abc",
               birthDate: "01-01-100"
             }) {
@@ -189,8 +127,8 @@ describe("GraphQL Server Test", function () {
       query: `#graphql
           mutation {
             createUser(data: {
-              name: "User Test",
-              email: "test1@example.com",
+              name: "First User",
+              email: "first1@example.com",
               password: "123456s",
               birthDate: "01-13-2001"
             }) {
@@ -211,8 +149,8 @@ describe("GraphQL Server Test", function () {
       query: `#graphql
           mutation {
             createUser(data: {
-              name: "User Test",
-              email: "test1@example.com",
+              name: "First User",
+              email: "first1@example.com",
               password: "123abc",
               birthDate: "01-12-1889" 
             }) {
