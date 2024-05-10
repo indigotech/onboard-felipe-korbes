@@ -9,7 +9,7 @@
     "start": "dotenv -e .env -- ts-node src/index.ts",
     "startTest": "dotenv -e test.env -- ts-node src/index.ts",
     "studioTest": "dotenv -e test.env -- prisma studio",
-    "test": "dotenv -e test.env -- mocha --require ts-node/register test/*.ts"
+    "test": "dotenv -e test.env -- mocha --require ts-node/register test/test.ts"
   },
   "keywords": [],
   "author": "Felipe Korbes",
