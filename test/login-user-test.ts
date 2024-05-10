@@ -5,10 +5,6 @@ import { server, url } from "../src/setup-server";
 import axios from "axios";
 
 describe("Hello Query Test", function () {
-  before(async function () {
-    await setup();
-  });
-
   it("Tried a mock login attempt", async function () {
     const response = await axios.post(url, {
       query: `#graphql
@@ -44,9 +40,5 @@ describe("Hello Query Test", function () {
     }).to.be.deep.eq(expectedUser);
 
     assert.equal(response.data.data.login.token, "tokenTest");
-  });
-
-  after(async function () {
-    await server.stop();
   });
 });
