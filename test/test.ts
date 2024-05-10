@@ -3,7 +3,7 @@ import { setup } from "../src/setup";
 import { server } from "../src/setup-server";
 import { prisma } from "../src/setup-db";
 
-describe("Hello Query Test", function () {
+describe("General Tests", function () {
   before(async function () {
     console.log("Starting setup");
     await setup();
