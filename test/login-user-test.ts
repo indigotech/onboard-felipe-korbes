@@ -25,13 +25,24 @@ describe("Login authentication tests", function () {
       })
     });
 
-    const expectedUser = {
-      name: "User Test",
-      email: "test@example.com",
-      birthDate: "01-01-2000"
+    const createdUserDB = await prisma.user.findUnique({
+      where: {
+        email: "test@example.com"
+      }
+    });
+
+    const expectedResponse = {
+      user: {
+        id: createdUserDB?.id.toString(),
+        name: "User Test",
+        email: "test@example.com",
+        birthDate: "01-01-2000"
+      },
+      token: "tokenTest"
     };
 
-    expect(response.data.data.login.user).to.be.deep.eq(expectedUser);
+    const userResponse = response.data.data.login;
+    expect(userResponse).to.be.deep.eq(expectedResponse);
 
     assert.equal(response.data.data.login.token, "tokenTest");
 

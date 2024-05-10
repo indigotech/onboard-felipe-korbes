@@ -16,29 +16,28 @@ describe("User creation test", function () {
       })
     });
 
-    const expectedUser = {
-      name: "User Test",
-      email: "test@example.com",
-      birthDate: "01-01-2000"
-    };
-
-    const createdUser = await prisma.user.findUnique({
+    const createdUserDB = await prisma.user.findUnique({
       where: {
         email: "test@example.com"
       }
     });
 
-    expect(createdUser).to.not.be.null;
-    if (createdUser) {
-      expect(createdUser.email).to.be.equal("test@example.com");
-      expect(createdUser.name).to.be.equal("User Test");
-      expect(createdUser.birthDate).to.be.equal("01-01-2000");
+    const expectedUser = {
+      id: createdUserDB?.id.toString(),
+      name: "User Test",
+      email: "test@example.com",
+      birthDate: "01-01-2000"
+    };
+
+    expect(createdUserDB).to.not.be.null;
+    if (createdUserDB) {
+      expect(createdUserDB.email).to.be.equal("test@example.com");
+      expect(createdUserDB.name).to.be.equal("User Test");
+      expect(createdUserDB.birthDate).to.be.equal("01-01-2000");
     }
-    expect({
-      name: response.data.data.createUser.name,
-      email: response.data.data.createUser.email,
-      birthDate: response.data.data.createUser.birthDate
-    }).to.be.deep.eq(expectedUser);
+
+    const userResponse = response.data.data.createUser;
+    expect(userResponse).to.be.deep.eq(expectedUser);
 
     await prisma.user.deleteMany({});
   });
@@ -52,13 +51,13 @@ describe("User creation test", function () {
       }
     });
 
-    const createdUser = await prisma.user.findUnique({
+    const createdUserDB = await prisma.user.findUnique({
       where: {
         email: "test@example.com"
       }
     });
 
-    expect(createdUser).to.not.be.null;
+    expect(createdUserDB).to.not.be.null;
 
     const response = await axios.post(url, {
       query: createUserMutation({
