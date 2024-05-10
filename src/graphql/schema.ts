@@ -3,10 +3,22 @@ export const typeDefs = `#graphql
     hello: String
   }
 
+  type Mutation {
+    createUser(data: UserInput!): User!
+    login(data: LoginInput!): authentication!
+  }
+
   input UserInput {
     name: String!
     email: String!
     password: String!
+    birthDate: String!
+  }
+  
+  type User {
+    id: ID!
+    name: String!
+    email: String!
     birthDate: String!
   }
 
@@ -15,15 +27,9 @@ export const typeDefs = `#graphql
     password: String!
   }
 
-  type User {
-    id: ID!
-    name: String!
-    email: String!
-    birthDate: String!
-  }
-
-  type Mutation {
-    createUser(data: UserInput!): User!
+  type authentication {
+    user: User!
+    token: String!
   }
 `;
 
