@@ -1,3 +1,4 @@
+import { prisma } from "../setup-db";
 import { UserInput, LoginInput } from "./schema";
 import { prisma } from "../setup-db";
 import bcrypt from "bcrypt";
@@ -48,8 +49,7 @@ export const resolvers = {
         email: user.email,
         birthDate: user.birthDate
       };
-      const token = "tokenTest";
-
+      const token = generateToken(loggedUser);
       return {
         user: loggedUser,
         token
