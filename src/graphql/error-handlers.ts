@@ -25,8 +25,7 @@ export const formatError = (formattedError: GraphQLFormattedError, error: unknow
   } else {
     return {
       code: 400,
-      message: "Something went wrong, try again",
-      additionalInfo: null
+      message: "Something went wrong, try again"
     };
   }
 };
