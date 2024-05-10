@@ -12,7 +12,7 @@ describe("Hello Query Test", function () {
 
   require("../test/hello-test");
   require("../test/new-user-creation-test");
-  require("../test/new-user-error-test");
+  require("../test/login-user-test");
 
   after(async function () {
     await prisma.user.deleteMany({});
