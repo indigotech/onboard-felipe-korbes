@@ -1,7 +1,6 @@
-import { describe, before, it, after } from "mocha"; // Mocha imports
+import { describe, it } from "mocha";
 import { assert, expect } from "chai";
-import { setup } from "../src/setup";
-import { server, url } from "../src/setup-server";
+import { url } from "../src/setup-server";
 import axios from "axios";
 
 describe("Hello Query Test", function () {
