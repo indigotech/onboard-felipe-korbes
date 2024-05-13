@@ -7,12 +7,15 @@ import axios from "axios";
 describe("User creation test", function () {
   it("Created a new user", async function () {
     const response = await axios.post(url, {
-      query: createUserMutation({
-        name: "User Test",
-        email: "test@example.com",
-        password: "123abc",
-        birthDate: "01-01-2000"
-      })
+      query: createUserMutation,
+      variables: {
+        data: {
+          name: "User Test",
+          email: "test@example.com",
+          password: "123abc",
+          birthDate: "01-01-2000"
+        }
+      }
     });
 
     const createdUserDB = await prisma.user.findUnique({
@@ -40,7 +43,7 @@ describe("User creation test", function () {
   });
 
   it("Tried to create a new user with an already existing email and failed", async function () {
-    await prisma.user.create({
+    const userDB = await prisma.user.create({
       data: {
         name: "User Test",
         email: "test@example.com",
@@ -48,21 +51,18 @@ describe("User creation test", function () {
       }
     });
 
-    const createdUserDB = await prisma.user.findUnique({
-      where: {
-        email: "test@example.com"
-      }
-    });
-
-    expect(createdUserDB).to.not.be.null;
+    expect(userDB).to.not.be.null;
 
     const response = await axios.post(url, {
-      query: createUserMutation({
-        name: "User Test",
-        email: "test@example.com",
-        password: "123abc",
-        birthDate: "01-01-2000"
-      })
+      query: createUserMutation,
+      variables: {
+        data: {
+          name: "User Test",
+          email: "test@example.com",
+          password: "123abc",
+          birthDate: "01-01-2000"
+        }
+      }
     });
 
     expect(response.data.errors).to.be.deep.eq([
@@ -75,12 +75,15 @@ describe("User creation test", function () {
 
   it("Tried to create a new user with a password less than 6 digits and failed", async function () {
     const response = await axios.post(url, {
-      query: createUserMutation({
-        name: "User Test",
-        email: "test1@example.com",
-        password: "abc",
-        birthDate: "01-01-2000"
-      })
+      query: createUserMutation,
+      variables: {
+        data: {
+          name: "User Test",
+          email: "test@example.com",
+          password: "abc",
+          birthDate: "01-01-2000"
+        }
+      }
     });
 
     expect(response.data.errors).to.be.deep.eq([
@@ -93,12 +96,15 @@ describe("User creation test", function () {
 
   it("Tried to create a new user with a password containing only letters and failed", async function () {
     const response = await axios.post(url, {
-      query: createUserMutation({
-        name: "User Test",
-        email: "test1@example.com",
-        password: "abcdef",
-        birthDate: "01-01-2000"
-      })
+      query: createUserMutation,
+      variables: {
+        data: {
+          name: "User Test",
+          email: "test@example.com",
+          password: "abcdef",
+          birthDate: "01-01-2000"
+        }
+      }
     });
     expect(response.data.errors).to.be.deep.eq([
       {
@@ -110,12 +116,15 @@ describe("User creation test", function () {
 
   it("Tried to create a new user with a password containing only numbers and failed", async function () {
     const response = await axios.post(url, {
-      query: createUserMutation({
-        name: "User Test",
-        email: "test1@example.com",
-        password: "123456",
-        birthDate: "01-01-2000"
-      })
+      query: createUserMutation,
+      variables: {
+        data: {
+          name: "User Test",
+          email: "test@example.com",
+          password: "123456",
+          birthDate: "01-01-2000"
+        }
+      }
     });
     expect(response.data.errors).to.be.deep.eq([
       {
@@ -127,12 +136,15 @@ describe("User creation test", function () {
 
   it("Tried to create a new user with a wrongly formatted birthdate and failed", async function () {
     const response = await axios.post(url, {
-      query: createUserMutation({
-        name: "User Test",
-        email: "test1@example.com",
-        password: "123abc",
-        birthDate: "01-01-200"
-      })
+      query: createUserMutation,
+      variables: {
+        data: {
+          name: "User Test",
+          email: "test@example.com",
+          password: "123abc",
+          birthDate: "01012000"
+        }
+      }
     });
     expect(response.data.errors).to.be.deep.eq([
       {
@@ -144,12 +156,15 @@ describe("User creation test", function () {
 
   it("Tried to create a new user with a invalid birthdate and failed", async function () {
     const response = await axios.post(url, {
-      query: createUserMutation({
-        name: "User Test",
-        email: "test1@example.com",
-        password: "123abc",
-        birthDate: "01-01-200"
-      })
+      query: createUserMutation,
+      variables: {
+        data: {
+          name: "User Test",
+          email: "test@example.com",
+          password: "123abc",
+          birthDate: "01-13-2000"
+        }
+      }
     });
     expect(response.data.errors).to.be.deep.eq([
       {
@@ -161,12 +176,15 @@ describe("User creation test", function () {
 
   it("Tried to create a new user with a invalid birthdate year and failed", async function () {
     const response = await axios.post(url, {
-      query: createUserMutation({
-        name: "User Test",
-        email: "test1@example.com",
-        password: "123abc",
-        birthDate: "01-01-1889"
-      })
+      query: createUserMutation,
+      variables: {
+        data: {
+          name: "User Test",
+          email: "test@example.com",
+          password: "123abc",
+          birthDate: "01-01-1889"
+        }
+      }
     });
 
     const now = new Date();

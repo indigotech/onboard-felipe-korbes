@@ -1,13 +1,9 @@
 import { LoginInput, UserInput } from "../src/graphql/schema";
 import bcrypt from "bcrypt";
 
-export function loginUserMutation(data: LoginInput) {
-  return `#graphql
-  mutation {
-    login(data: {
-      email: "${data.email}",
-      password: "${data.password}"
-    }) {
+export const loginUserMutation = `#graphql
+  mutation Login ($data: LoginInput!) {
+    login(data: $data) {
       user {
         id
         name
@@ -17,21 +13,13 @@ export function loginUserMutation(data: LoginInput) {
       token
     }
   }`;
-}
 
-export function createUserMutation(data: UserInput) {
-  return `#graphql
-  mutation {
-    createUser(data: {
-      name: "${data.name}",
-      email: "${data.email}",
-      password: "${data.password}",
-      birthDate: "${data.birthDate}"
-    }) {
+export const createUserMutation = `#graphql
+  mutation CreateUser ($data: UserInput!) {
+    createUser(data: $data) {
       id
       name
       email
       birthDate
     }
   }`;
-}
