@@ -3,7 +3,7 @@ import { assert, expect } from "chai";
 import { url } from "../src/setup-server";
 import axios from "axios";
 
-describe("Hello Query Test", function () {
+describe("Login test", function () {
   it("Tried a mock login attempt", async function () {
     const response = await axios.post(url, {
       query: `#graphql
@@ -31,12 +31,7 @@ describe("Hello Query Test", function () {
       birthDate: "01-01-2000"
     };
 
-    expect({
-      id: response.data.data.login.user.id,
-      name: response.data.data.login.user.name,
-      email: response.data.data.login.user.email,
-      birthDate: response.data.data.login.user.birthDate
-    }).to.be.deep.eq(expectedUser);
+    expect(response.data.data.login.user).to.be.deep.eq(expectedUser);
 
     assert.equal(response.data.data.login.token, "tokenTest");
   });
