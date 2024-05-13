@@ -60,7 +60,7 @@ export const resolvers = {
 
       return {
         user: loggedUser,
-        token: token
+        token
       };
     }
   }
