@@ -5,7 +5,7 @@ export const typeDefs = `#graphql
 
   type Mutation {
     createUser(data: UserInput!): User!
-    login(data: LoginInput!): authentication!
+    login(data: LoginInput!): Authentication!
   }
 
   input UserInput {
@@ -27,7 +27,7 @@ export const typeDefs = `#graphql
     password: String!
   }
 
-  type authentication {
+  type Authentication {
     user: User!
     token: String!
   }

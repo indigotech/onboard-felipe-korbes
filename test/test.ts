@@ -10,9 +10,9 @@ describe("Hello Query Test", function () {
     console.log("Setup complete");
   });
 
-  require("../test/hello-test");
-  require("../test/new-user-creation-test");
-  require("../test/login-user-test");
+  require("./hello-test");
+  require("./new-user-creation-test");
+  require("./login-user-test");
 
   after(async function () {
     await prisma.user.deleteMany({});
