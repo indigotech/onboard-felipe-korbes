@@ -1,8 +1,8 @@
 import { url } from "../src/setup-server";
 import { prisma } from "../src/setup-db";
-import { describe, it } from "mocha";
 import { assert, expect } from "chai";
-import { hashPassword, loginUserMutation } from "./helpers/helpers";
+import { loginUserMutation } from "./test-queries";
+import { hashPassword } from "../src/graphql/resolvers";
 import axios from "axios";
 
 describe("Login authentication tests", function () {

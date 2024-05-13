@@ -1,8 +1,7 @@
 import { url } from "../src/setup-server";
 import { expect } from "chai";
 import { prisma } from "../src/setup-db";
-import { describe, it } from "mocha";
-import { createUserMutation } from "./helpers/helpers";
+import { createUserMutation } from "./test-queries";
 import axios from "axios";
 
 describe("User creation test", function () {

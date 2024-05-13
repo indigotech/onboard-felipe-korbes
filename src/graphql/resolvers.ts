@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { hasLettersAndNumbers, isValidEmail, isValidDate, isValidYear, passwordLenght } from "./helpers/error-handlers";
 import { loginUser } from "./helpers/helpers";
 
-const hashPassword = async (password: string) => {
+export const hashPassword = async (password: string) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   return hashedPassword;
@@ -27,7 +27,7 @@ export const resolvers = {
 
       const hashedPassword = await hashPassword(data.password);
 
-      const newUser = await prisma.user.create({
+      return prisma.user.create({
         data: {
           name: data.name,
           password: hashedPassword,
@@ -35,8 +35,6 @@ export const resolvers = {
           birthDate: data.birthDate
         }
       });
-
-      return newUser;
     },
 
     login: async (parent: any, args: { data: LoginInput }, context: any, info: any) => {
