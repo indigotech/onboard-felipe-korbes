@@ -127,7 +127,7 @@ describe("Login authentication tests", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Wrong password and/or email"
+        message: "Senha e/ou email incorretos"
       }
     ]);
   });
@@ -135,7 +135,7 @@ describe("Login authentication tests", function () {
   it("Failed to login with a non existing email", async function () {
     const hashedPassword = await hashPassword("123abc");
 
-    await prisma.user.create({
+    const userDB = await prisma.user.create({
       data: {
         name: "User Test",
         email: "test@example.com",
@@ -158,7 +158,7 @@ describe("Login authentication tests", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: `User with email test1@example.com not found`
+        message: `Usuário com email test1@example.com não encontrado`
       }
     ]);
   });

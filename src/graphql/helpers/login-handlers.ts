@@ -14,12 +14,12 @@ export async function loginUser(email: string, plaintextPassword: string) {
     const match = await bcrypt.compare(plaintextPassword, user.password);
 
     if (!match) {
-      throw new CustomError(400, "Wrong password and/or email");
+      throw new CustomError(400, "Senha e/ou email incorretos");
     } else {
       return user;
     }
   } else {
-    throw new CustomError(400, `User with email ${email} not found`);
+    throw new CustomError(400, `Usuário com email ${email} não encontrado`);
   }
 }
 
