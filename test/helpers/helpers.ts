@@ -2,9 +2,7 @@ import jwt from "jsonwebtoken";
 
 interface TokenPayload {
   id: number;
-  name: string;
   email: string;
-  birthDate: string;
 }
 
 export function verifyToken(token: string): TokenPayload {
