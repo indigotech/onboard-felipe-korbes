@@ -48,11 +48,12 @@ describe("Login authentication tests", function () {
 
     const expectedTokenResponse = {
       id: decodedToken.id,
-      email: decodedToken.email,
-      expiration: "7d"
+      email: decodedToken.email
     };
 
+    const expiration: number = decodedToken.iat - decodedToken.exp;
     expect(decodedToken).to.include(expectedTokenResponse);
+    expect(expiration).to.be.lessThanOrEqual(3600);
   });
 
   it("Logged in successfully with remember me not checked (1h token duration)", async function () {
@@ -93,12 +94,14 @@ describe("Login authentication tests", function () {
     expect(userResponse).to.be.deep.eq(expectedResponse);
 
     const decodedToken = verifyToken(token);
+    const expiration: number = decodedToken.iat - decodedToken.exp;
 
     const expectedTokenResponse = {
       id: decodedToken.id
     };
 
     expect(decodedToken).to.include(expectedTokenResponse);
+    expect(expiration).to.be.lessThanOrEqual(3600 * 24 * 7);
   });
 
   it("Failed to login with the wrong password", async function () {

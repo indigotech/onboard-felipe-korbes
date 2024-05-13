@@ -40,7 +40,7 @@ export function generateToken(user: UserToken): string {
     expiresIn: "1h"
   };
 
-  const secret = process.env.JWT_SECRET ?? "mysupersecret";
+  const secret = process.env.JWT_SECRET as string;
 
   return jwt.sign(payload, secret, options);
 }
