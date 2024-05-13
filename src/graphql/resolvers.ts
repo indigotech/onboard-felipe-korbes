@@ -2,7 +2,7 @@ import { UserInput, LoginInput } from "./schema";
 import { prisma } from "../setup-db";
 import bcrypt from "bcrypt";
 import { hasLettersAndNumbers, isValidEmail, isValidDate, isValidYear, passwordLenght } from "./helpers/error-handlers";
-import { loginUser } from "./helpers/helpers";
+import { loginUser } from "./helpers/login-user";
 
 export const hashPassword = async (password: string) => {
   const saltRounds = 10;
