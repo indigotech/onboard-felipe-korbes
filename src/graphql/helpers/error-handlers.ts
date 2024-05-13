@@ -1,7 +1,6 @@
 import { GraphQLFormattedError } from "graphql";
 import { unwrapResolverError } from "@apollo/server/errors";
 import { prisma } from "../../setup-db";
-import bcrypt from "bcrypt";
 
 export class CustomError extends Error {
   code: number;

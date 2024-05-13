@@ -1,13 +1,13 @@
 import { prisma } from "../setup-db";
 import { UserInput, LoginInput } from "./schema";
-import { prisma } from "../setup-db";
-import bcrypt from "bcrypt";
+import { generateToken, loginUser } from "./helpers/login-handlers";
 import { hasLettersAndNumbers, isValidEmail, isValidDate, isValidYear, passwordLenght } from "./helpers/error-handlers";
-import { loginUser } from "./helpers/login-user";
+import bcrypt from "bcrypt";
 
 export const hashPassword = async (password: string) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
+
   return hashedPassword;
 };
 

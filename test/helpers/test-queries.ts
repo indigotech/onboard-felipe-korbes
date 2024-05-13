@@ -1,6 +1,3 @@
-import { LoginInput, UserInput } from "../src/graphql/schema";
-import bcrypt from "bcrypt";
-
 export const loginUserMutation = `#graphql
   mutation Login ($data: LoginInput!) {
     login(data: $data) {

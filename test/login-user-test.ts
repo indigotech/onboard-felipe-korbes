@@ -1,9 +1,10 @@
 import { url } from "../src/setup-server";
 import { prisma } from "../src/setup-db";
-import { assert, expect } from "chai";
-import { loginUserMutation, verifyToken } from "./helpers/helpers";
+import { verifyToken } from "./helpers/helpers";
+import { hashPassword } from "../src/graphql/resolvers";
+import { expect } from "chai";
+import { loginUserMutation } from "./helpers/test-queries";
 import axios from "axios";
-import { hashPassword } from "../src/graphql/helpers/helpers";
 
 describe("Login authentication tests", function () {
   it("Logged in successfully", async function () {
@@ -28,20 +29,28 @@ describe("Login authentication tests", function () {
       }
     });
 
+    const token = response.data.data.login.token;
     const expectedResponse = {
       user: {
-        id: userDB?.id.toString(),
+        id: userDB?.id,
         name: "User Test",
         email: "test@example.com",
         birthDate: "01-01-2000"
       },
-      token: "tokenTest"
+      token
     };
 
     const userResponse = response.data.data.login;
     expect(userResponse).to.be.deep.eq(expectedResponse);
 
-    assert.equal(response.data.data.login.token, "tokenTest");
+    const decodedToken = verifyToken(token);
+
+    const expectedTokenResponse = {
+      id: decodedToken.id,
+      email: decodedToken.email
+    };
+
+    expect(decodedToken).to.include(expectedTokenResponse);
   });
 
   it("Failed to login with the wrong password", async function () {

@@ -1,7 +1,7 @@
 import { url } from "../src/setup-server";
 import { expect } from "chai";
 import { prisma } from "../src/setup-db";
-import { createUserMutation } from "./test-queries";
+import { createUserMutation } from "./helpers/test-queries";
 import axios from "axios";
 
 describe("User creation test", function () {
