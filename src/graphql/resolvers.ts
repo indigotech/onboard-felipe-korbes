@@ -1,4 +1,4 @@
-import { UserInput } from "./schema";
+import { UserInput, LoginInput } from "./schema";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../setup-db";
 import bcrypt from "bcrypt";
@@ -44,6 +44,22 @@ export const resolvers = {
 
         throw error;
       }
+    },
+
+    login: async (parent: any, args: { data: LoginInput }, context: any, info: any) => {
+      const { data } = args;
+      const response = {
+        id: "37",
+        name: "Test Login",
+        email: "login@email.com",
+        birthDate: "01-01-2000"
+      };
+      const token = "tokenTest";
+
+      return {
+        user: response,
+        token: token
+      };
     }
   }
 };
