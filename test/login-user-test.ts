@@ -7,7 +7,7 @@ import { loginUserMutation } from "./helpers/test-queries";
 import axios from "axios";
 
 describe("Login authentication tests", function () {
-  it("Logged in successfully", async function () {
+  it("Logged in successfully with remember me checked (7d token duration)", async function () {
     const hashedPassword = await hashPassword("123abc");
 
     const userDB = await prisma.user.create({
@@ -24,7 +24,56 @@ describe("Login authentication tests", function () {
       variables: {
         data: {
           email: "test@example.com",
-          password: "123abc"
+          password: "123abc",
+          rememberMe: true
+        }
+      }
+    });
+
+    const token = response.data.data.login.token;
+    const expectedResponse = {
+      user: {
+        id: userDB?.id,
+        name: "User Test",
+        email: "test@example.com",
+        birthDate: "01-01-2000"
+      },
+      token
+    };
+
+    const userResponse = response.data.data.login;
+    expect(userResponse).to.be.deep.eq(expectedResponse);
+
+    const decodedToken = verifyToken(token);
+
+    const expectedTokenResponse = {
+      id: decodedToken.id,
+      email: decodedToken.email,
+      expiration: "7d"
+    };
+
+    expect(decodedToken).to.include(expectedTokenResponse);
+  });
+
+  it("Logged in successfully with remember me not checked (1h token duration)", async function () {
+    const hashedPassword = await hashPassword("123abc");
+
+    const userDB = await prisma.user.create({
+      data: {
+        name: "User Test",
+        email: "test@example.com",
+        password: hashedPassword,
+        birthDate: "01-01-2000"
+      }
+    });
+
+    const response = await axios.post(url, {
+      query: loginUserMutation,
+      variables: {
+        data: {
+          email: "test@example.com",
+          password: "123abc",
+          rememberMe: false
         }
       }
     });
@@ -69,7 +118,8 @@ describe("Login authentication tests", function () {
       variables: {
         data: {
           email: "test@example.com",
-          password: "123abc1"
+          password: "123abc1",
+          rememberMe: true
         }
       }
     });
@@ -99,7 +149,8 @@ describe("Login authentication tests", function () {
       variables: {
         data: {
           email: "test1@example.com",
-          password: "123abc1"
+          password: "123abc",
+          rememberMe: true
         }
       }
     });
