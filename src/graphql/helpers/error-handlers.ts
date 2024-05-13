@@ -1,6 +1,6 @@
 import { GraphQLFormattedError } from "graphql";
 import { unwrapResolverError } from "@apollo/server/errors";
-import { prisma } from "../setup-db";
+import { prisma } from "../../setup-db";
 import bcrypt from "bcrypt";
 
 export class CustomError extends Error {
@@ -74,25 +74,5 @@ export async function isValidEmail(email: string) {
 
   if (user?.email === email) {
     throw new CustomError(400, "Email already taken, please use a different email");
-  }
-}
-
-export async function loginUser(email: string, plaintextPassword: string) {
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email
-    }
-  });
-
-  if (user?.email) {
-    const match = await bcrypt.compare(plaintextPassword, user.password);
-
-    if (!match) {
-      throw new CustomError(400, "Wrong password and/or email");
-    } else {
-      return user;
-    }
-  } else {
-    throw new CustomError(400, `User with email ${email} not found`);
   }
 }
