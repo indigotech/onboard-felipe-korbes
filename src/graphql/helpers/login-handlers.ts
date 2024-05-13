@@ -30,7 +30,9 @@ interface UserToken {
   birthDate: string | null;
 }
 
-export function generateToken(user: UserToken): string {
+export function generateToken(user: UserToken, rememberMe: boolean): string {
+  const expiration = rememberMe ? "7d" : "1h";
+
   const payload = {
     id: user.id,
     email: user.email
