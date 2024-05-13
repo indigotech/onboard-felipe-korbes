@@ -1,6 +1,6 @@
-import { GraphQLFormattedError } from "graphql";
-import { unwrapResolverError } from "@apollo/server/errors";
 import { prisma } from "../../setup-db";
+import { unwrapResolverError } from "@apollo/server/errors";
+import { GraphQLFormattedError } from "graphql";
 
 export class CustomError extends Error {
   code: number;

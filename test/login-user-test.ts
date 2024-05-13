@@ -1,9 +1,9 @@
 import { url } from "../src/setup-server";
 import { prisma } from "../src/setup-db";
-import { verifyToken } from "./helpers/helpers";
-import { hashPassword } from "../src/graphql/resolvers";
 import { expect } from "chai";
-import { loginUserMutation } from "./helpers/test-queries";
+import { verifyToken } from "../src/graphql/helpers/authentication-handler";
+import { hashPassword } from "../src/graphql/resolvers";
+import { loginUserMutation } from "./test-queries";
 import axios from "axios";
 import { longExpiration, shortExpiration } from "../src/graphql/helpers/login-handlers";
 

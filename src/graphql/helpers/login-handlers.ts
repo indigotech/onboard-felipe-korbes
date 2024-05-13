@@ -1,5 +1,5 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { prisma } from "../../setup-db";
 import { CustomError } from "./error-handlers";
 
