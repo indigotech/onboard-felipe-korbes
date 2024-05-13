@@ -38,8 +38,6 @@ describe("User creation test", function () {
 
     const userResponse = response.data.data.createUser;
     expect(userResponse).to.be.deep.eq(expectedUser);
-
-    await prisma.user.deleteMany({});
   });
 
   it("Tried to create a new user with an already existing email and failed", async function () {
@@ -74,7 +72,6 @@ describe("User creation test", function () {
         message: "Email already taken, please use a different email"
       }
     ]);
-    await prisma.user.deleteMany({});
   });
 
   it("Tried to create a new user with a password less than 6 digits and failed", async function () {

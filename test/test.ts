@@ -10,12 +10,15 @@ describe("General Tests", function () {
     console.log("Setup complete");
   });
 
+  afterEach(async function () {
+    await prisma.user.deleteMany({});
+  });
+
   require("./hello-test");
   require("./new-user-creation-test");
   require("./login-user-test");
 
   after(async function () {
-    await prisma.user.deleteMany({});
     await server.stop();
   });
 });

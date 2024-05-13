@@ -45,7 +45,5 @@ describe("Login authentication tests", function () {
     expect(userResponse).to.be.deep.eq(expectedResponse);
 
     assert.equal(response.data.data.login.token, "tokenTest");
-
-    await prisma.user.deleteMany({});
   });
 });
