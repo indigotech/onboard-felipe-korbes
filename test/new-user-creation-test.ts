@@ -43,8 +43,6 @@ describe("User creation test", function () {
       birthDate: "01-01-2000"
     };
     expect(userResponse).to.be.deep.eq(expectedUserResponse);
-
-    await prisma.user.deleteMany({});
   });
 
   it("Tried to create a new user with an already existing email and failed", async function () {
