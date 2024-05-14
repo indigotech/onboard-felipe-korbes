@@ -71,7 +71,7 @@ describe("User creation test", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Email already taken, please use a different email"
+        message: "Email já está sendo utilizado, por favor, escolha outro"
       }
     ]);
   });
@@ -92,7 +92,7 @@ describe("User creation test", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Password must be at least 6 characters long"
+        message: "A senha deve conter pelo menos 6 caracteres"
       }
     ]);
   });
@@ -112,7 +112,7 @@ describe("User creation test", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Password must contain at least one letter and one number"
+        message: "A senha deve conter pelo menos uma letra e um número"
       }
     ]);
   });
@@ -132,7 +132,7 @@ describe("User creation test", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Password must contain at least one letter and one number"
+        message: "A senha deve conter pelo menos uma letra e um número"
       }
     ]);
   });
@@ -152,7 +152,7 @@ describe("User creation test", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Invalid birth date. Birth date must be in the format DD-MM-YYYY"
+        message: "Data inválida, por favor, informe uma data no formato dd-mm-yyyy"
       }
     ]);
   });
@@ -172,7 +172,7 @@ describe("User creation test", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Invalid birth date. Birth date must be in the format DD-MM-YYYY"
+        message: "Data inválida, por favor, informe uma data no formato dd-mm-yyyy"
       }
     ]);
   });
@@ -196,7 +196,7 @@ describe("User creation test", function () {
     expect(response.data.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Invalid year. Year must be in the range 1900 - " + currentYear
+        message: "Ano inválido. Ano deve estar entre 1900 e " + currentYear
       }
     ]);
   });

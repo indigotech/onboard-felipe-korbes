@@ -14,25 +14,36 @@ export async function loginUser(email: string, plaintextPassword: string) {
     const match = await bcrypt.compare(plaintextPassword, user.password);
 
     if (!match) {
-      throw new CustomError(400, "Wrong password and/or email");
+      throw new CustomError(400, "Senha e/ou email incorretos");
     } else {
       return user;
     }
   } else {
-    throw new CustomError(400, `User with email ${email} not found`);
+    throw new CustomError(400, `Usuário com email ${email} não encontrado`);
   }
 }
 
-export function generateToken(id: number): string {
+interface UserToken {
+  id: number;
+  name: string;
+  email: string;
+  birthDate: string | null;
+}
+
+export const longExpiration = "604800";
+export const shortExpiration = "3600";
+export function generateToken(id: number, rememberMe: boolean): string {
+  const expiration = rememberMe ? longExpiration + "s" : shortExpiration + "s";
+
   const payload = {
-    id
+    id: id
   };
 
   const options = {
-    expiresIn: "1h"
+    expiresIn: expiration
   };
 
-  const secret = process.env.JWT_SECRET ?? "mysupersecret";
+  const secret = process.env.JWT_SECRET as string;
 
   return jwt.sign(payload, secret, options);
 }

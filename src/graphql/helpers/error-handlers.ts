@@ -24,21 +24,21 @@ export const formatError = (formattedError: GraphQLFormattedError, error: unknow
   } else {
     return {
       code: 400,
-      message: "Something went wrong, try again"
+      message: "Algo deu errado, tente novamente"
     };
   }
 };
 
 export function passwordLenght(password: string): void {
   if (password.length < 6) {
-    throw new CustomError(400, "Password must be at least 6 characters long");
+    throw new CustomError(400, "A senha deve conter pelo menos 6 caracteres");
   }
 }
 
 export function hasLettersAndNumbers(password: string): void {
   const lettersAndNumbers: boolean = /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
   if (!lettersAndNumbers) {
-    throw new CustomError(400, "Password must contain at least one letter and one number");
+    throw new CustomError(400, "A senha deve conter pelo menos uma letra e um número");
   }
 }
 
@@ -46,7 +46,7 @@ export function isValidDate(dateInput: string): void {
   const datePattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(\d{4})$/.test(dateInput);
 
   if (!datePattern) {
-    throw new CustomError(400, "Invalid birth date. Birth date must be in the format DD-MM-YYYY");
+    throw new CustomError(400, "Data inválida, por favor, informe uma data no formato dd-mm-yyyy");
   }
 }
 
@@ -60,7 +60,7 @@ export function isValidYear(dateInput: string): void {
   const currentYear = now.getFullYear();
 
   if (year < 1900 || year > currentYear) {
-    throw new CustomError(400, "Invalid year. Year must be in the range 1900 - " + currentYear);
+    throw new CustomError(400, "Ano inválido. Ano deve estar entre 1900 e " + currentYear);
   }
 }
 
@@ -72,6 +72,6 @@ export async function isValidEmail(email: string) {
   });
 
   if (user?.email === email) {
-    throw new CustomError(400, "Email already taken, please use a different email");
+    throw new CustomError(400, "Email já está sendo utilizado, por favor, escolha outro");
   }
 }
