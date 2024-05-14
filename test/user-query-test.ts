@@ -48,7 +48,7 @@ describe("User Query Test", function () {
       birthDate: userDB.birthDate
     };
 
-    expect(expectedUserDB).to.be.deep.eq(userQueryResponse.data.getUser);
+    expect(userQueryResponse.data.getUser).to.be.deep.eq(expectedUserDB);
   });
 
   it("Failed to find a user with an invalid id", async function () {
