@@ -19,19 +19,18 @@ export function verifyToken(token: string): TokenPayload | null {
 
 export interface AuthenticationData {
   user?: TokenPayload;
-  isValidToken?: boolean;
 }
 
 export const context = async ({ req }: any): Promise<AuthenticationData> => {
-  const token = req.headers.authorization || "";
+  const token = req.headers.authorization ?? "";
   if (!token) {
     return {};
   }
   const user = verifyToken(token);
 
   if (!user) {
-    return { isValidToken: false };
+    return {};
   }
 
-  return { user, isValidToken: true };
+  return { user };
 };

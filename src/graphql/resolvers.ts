@@ -28,8 +28,8 @@ export const resolvers = {
     createUser: async (parent: any, args: { data: UserInput }, context: AuthenticationData, info: any) => {
       const { data } = args;
 
-      const { user, isValidToken } = context;
-      if (!isValidToken) {
+      const { user } = context;
+      if (!user) {
         throw new CustomError(401, "Operação não autorizada");
       }
       passwordLenght(data.password);
