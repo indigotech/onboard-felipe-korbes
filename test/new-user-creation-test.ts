@@ -8,7 +8,7 @@ import axios from "axios";
 
 describe("User creation test", function () {
   it("Created a new user successfully", async function () {
-    const token = generateToken({ id: 1, email: "test@email.com" }, false);
+    const token = generateToken(1, false);
 
     const createdUserResponse = await axios.post(
       url,
@@ -58,7 +58,7 @@ describe("User creation test", function () {
   });
 
   it("Failed to create a new user with an invalid token", async function () {
-    const token = generateToken({ id: 1, email: "test@email.com" }, false);
+    const token = generateToken(1, false);
 
     const createdUserResponse = await axios.post(
       url,
@@ -100,7 +100,7 @@ describe("User creation test", function () {
       }
     });
 
-    const token = generateToken({ id: userDB.id, email: userDB.email }, false);
+    const token = generateToken(userDB.id, false);
 
     const createdUserResponse = await axios.post(
       url,
@@ -131,7 +131,7 @@ describe("User creation test", function () {
   });
 
   it("Tried to create a new user with a password less than 6 digits and failed", async function () {
-    const token = generateToken({ id: 1, email: "test@email.com" }, false);
+    const token = generateToken(1, false);
 
     const createdUserResponse = await axios.post(
       url,
@@ -162,7 +162,7 @@ describe("User creation test", function () {
   });
 
   it("Tried to create a new user with a password containing only letters and failed", async function () {
-    const token = generateToken({ id: 1, email: "test@email.com" }, false);
+    const token = generateToken(1, false);
 
     const createdUserResponse = await axios.post(
       url,
@@ -193,7 +193,7 @@ describe("User creation test", function () {
   });
 
   it("Tried to create a new user with a password containing only numbers and failed", async function () {
-    const token = generateToken({ id: 1, email: "test@email.com" }, false);
+    const token = generateToken(1, false);
 
     const createdUserResponse = await axios.post(
       url,
@@ -224,7 +224,7 @@ describe("User creation test", function () {
   });
 
   it("Tried to create a new user with a wrongly formatted birthdate and failed", async function () {
-    const token = generateToken({ id: 1, email: "test@email.com" }, false);
+    const token = generateToken(1, false);
 
     const createdUserResponse = await axios.post(
       url,
@@ -255,7 +255,7 @@ describe("User creation test", function () {
   });
 
   it("Tried to create a new user with a invalid birthdate and failed", async function () {
-    const token = generateToken({ id: 1, email: "test@email.com" }, false);
+    const token = generateToken(1, false);
 
     const createdUserResponse = await axios.post(
       url,
@@ -286,7 +286,7 @@ describe("User creation test", function () {
   });
 
   it("Tried to create a new user with a invalid birthdate year and failed", async function () {
-    const token = generateToken({ id: 1, email: "test@email.com" }, false);
+    const token = generateToken(1, false);
 
     const createdUserResponse = await axios.post(
       url,

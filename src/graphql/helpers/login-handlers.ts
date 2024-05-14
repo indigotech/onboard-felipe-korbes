@@ -23,13 +23,6 @@ export async function loginUser(email: string, plaintextPassword: string) {
   }
 }
 
-interface UserToken {
-  id: number;
-  name: string;
-  email: string;
-  birthDate: string | null;
-}
-
 export const longExpiration = "604800";
 export const shortExpiration = "3600";
 export function generateToken(id: number, rememberMe: boolean): string {
