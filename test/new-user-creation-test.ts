@@ -1,7 +1,7 @@
 import { url } from "../src/setup-server";
 import { expect } from "chai";
 import { prisma } from "../src/setup-db";
-import { createUserMutation } from "./test-queries";
+import { createUserMutation } from "./helpers/test-queries";
 import axios from "axios";
 
 describe("User creation test", function () {
@@ -24,22 +24,25 @@ describe("User creation test", function () {
       }
     });
 
-    const expectedUser = {
-      id: createdUserDB?.id.toString(),
+    const expectedUserDB = {
+      id: createdUserDB?.id,
+      password: createdUserDB?.password,
+      name: "User Test",
+      email: "test@example.com",
+      birthDate: "01-01-2000",
+      age: null
+    };
+
+    expect(createdUserDB).to.be.deep.eq(expectedUserDB);
+    const userResponse = response.data.data.createUser;
+
+    const expectedUserResponse = {
+      id: createdUserDB?.id,
       name: "User Test",
       email: "test@example.com",
       birthDate: "01-01-2000"
     };
-
-    expect(createdUserDB).to.not.be.null;
-    if (createdUserDB) {
-      expect(createdUserDB.email).to.be.equal("test@example.com");
-      expect(createdUserDB.name).to.be.equal("User Test");
-      expect(createdUserDB.birthDate).to.be.equal("01-01-2000");
-    }
-
-    const userResponse = response.data.data.createUser;
-    expect(userResponse).to.be.deep.eq(expectedUser);
+    expect(userResponse).to.be.deep.eq(expectedUserResponse);
   });
 
   it("Tried to create a new user with an already existing email and failed", async function () {

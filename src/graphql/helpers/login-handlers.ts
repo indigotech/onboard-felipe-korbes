@@ -1,6 +1,7 @@
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { prisma } from "../../setup-db";
 import { CustomError } from "./error-handlers";
-import bcrypt from "bcrypt";
 
 export async function loginUser(email: string, plaintextPassword: string) {
   const user = await prisma.user.findUnique({
@@ -20,4 +21,18 @@ export async function loginUser(email: string, plaintextPassword: string) {
   } else {
     throw new CustomError(400, `User with email ${email} not found`);
   }
+}
+
+export function generateToken(id: number): string {
+  const payload = {
+    id
+  };
+
+  const options = {
+    expiresIn: "1h"
+  };
+
+  const secret = process.env.JWT_SECRET ?? "mysupersecret";
+
+  return jwt.sign(payload, secret, options);
 }
