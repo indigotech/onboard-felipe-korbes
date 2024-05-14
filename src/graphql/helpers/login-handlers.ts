@@ -32,16 +32,15 @@ interface UserToken {
 
 export const longExpiration = "604800";
 export const shortExpiration = "3600";
-export function generateToken(user: UserToken, rememberMe: boolean): string {
+export function generateToken(id: number, rememberMe: boolean): string {
   const expiration = rememberMe ? longExpiration + "s" : shortExpiration + "s";
 
   const payload = {
-    id: user.id,
-    email: user.email
+    id: id
   };
 
   const options = {
-    expiresIn: "1h"
+    expiresIn: expiration
   };
 
   const secret = process.env.JWT_SECRET as string;
