@@ -49,7 +49,7 @@ export const resolvers = {
         email: user.email,
         birthDate: user.birthDate
       };
-      const token = generateToken(loggedUser);
+      const token = generateToken(user.id);
       return {
         user: loggedUser,
         token

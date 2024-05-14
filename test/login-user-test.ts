@@ -46,8 +46,7 @@ describe("Login authentication tests", function () {
     const decodedToken = verifyToken(token);
 
     const expectedTokenResponse = {
-      id: decodedToken.id,
-      email: decodedToken.email
+      id: decodedToken.id
     };
 
     expect(decodedToken).to.include(expectedTokenResponse);

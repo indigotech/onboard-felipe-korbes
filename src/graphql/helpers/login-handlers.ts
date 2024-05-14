@@ -23,17 +23,9 @@ export async function loginUser(email: string, plaintextPassword: string) {
   }
 }
 
-interface UserToken {
-  id: number;
-  name: string;
-  email: string;
-  birthDate: string | null;
-}
-
-export function generateToken(user: UserToken): string {
+export function generateToken(id: number): string {
   const payload = {
-    id: user.id,
-    email: user.email
+    id
   };
 
   const options = {
