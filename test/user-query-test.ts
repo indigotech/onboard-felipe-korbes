@@ -81,6 +81,42 @@ describe("User Query Test", function () {
     ]);
   });
 
+  it("Failed to find a user with an invalid id type (string)", async function () {
+    const hashedPassword = await hashPassword("123abc");
+
+    const userDB = await prisma.user.create({
+      data: {
+        name: "User Test",
+        email: "test@example.com",
+        password: hashedPassword,
+        birthDate: "01-01-2000"
+      }
+    });
+
+    const token = generateToken({ id: userDB.id, email: userDB.email }, false);
+    const userQueryResponse = await axios.post(
+      url,
+      {
+        query: getUserByID,
+        variables: {
+          id: "invalidId"
+        }
+      },
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
+
+    expect(userQueryResponse.data.errors).to.be.deep.eq([
+      {
+        code: 400,
+        message: "Algo deu errado, tente novamente"
+      }
+    ]);
+  });
+
   it("Failed to find a user with an invalid token", async function () {
     const hashedPassword = await hashPassword("123abc");
 
