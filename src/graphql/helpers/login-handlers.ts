@@ -30,8 +30,10 @@ interface UserToken {
   birthDate: string | null;
 }
 
+export const longExpiration = "604800";
+export const shortExpiration = "3600";
 export function generateToken(user: UserToken, rememberMe: boolean): string {
-  const expiration = rememberMe ? "7d" : "1h";
+  const expiration = rememberMe ? longExpiration + "s" : shortExpiration + "s";
 
   const payload = {
     id: user.id,

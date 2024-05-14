@@ -5,9 +5,10 @@ import { hashPassword } from "../src/graphql/resolvers";
 import { expect } from "chai";
 import { loginUserMutation } from "./helpers/test-queries";
 import axios from "axios";
+import { longExpiration, shortExpiration } from "../src/graphql/helpers/login-handlers";
 
 describe("Login authentication tests", function () {
-  it("Logged in successfully with remember me checked (7d token duration)", async function () {
+  it("Logged in successfully with remember me checked (long token duration)", async function () {
     const hashedPassword = await hashPassword("123abc");
 
     const userDB = await prisma.user.create({
@@ -51,12 +52,12 @@ describe("Login authentication tests", function () {
       email: decodedToken.email
     };
 
-    const expiration: number = decodedToken.iat - decodedToken.exp;
+    const expiration: number = decodedToken.exp - decodedToken.iat;
     expect(decodedToken).to.include(expectedTokenResponse);
-    expect(expiration).to.be.lessThanOrEqual(3600);
+    expect(expiration).to.be.eq(parseInt(longExpiration));
   });
 
-  it("Logged in successfully with remember me not checked (1h token duration)", async function () {
+  it("Logged in successfully with remember me not checked (short token duration)", async function () {
     const hashedPassword = await hashPassword("123abc");
 
     const userDB = await prisma.user.create({
@@ -94,14 +95,13 @@ describe("Login authentication tests", function () {
     expect(userResponse).to.be.deep.eq(expectedResponse);
 
     const decodedToken = verifyToken(token);
-    const expiration: number = decodedToken.iat - decodedToken.exp;
+    const expiration: number = decodedToken.exp - decodedToken.iat;
 
     const expectedTokenResponse = {
       id: decodedToken.id
     };
-
     expect(decodedToken).to.include(expectedTokenResponse);
-    expect(expiration).to.be.lessThanOrEqual(3600 * 24 * 7);
+    expect(expiration).to.be.eq(parseInt(shortExpiration));
   });
 
   it("Failed to login with the wrong password", async function () {
