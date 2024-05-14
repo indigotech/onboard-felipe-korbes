@@ -1,11 +1,19 @@
 import { url } from "../src/setup-server";
 import { expect } from "chai";
 import { prisma } from "../src/setup-db";
-import { getUserByID } from "./test-queries";
 import { hashPassword } from "../src/graphql/resolvers";
 import { generateToken } from "../src/graphql/helpers/login-handlers";
-import axios, { AxiosRequestConfig } from "axios";
-import { CustomError } from "../src/graphql/helpers/error-handlers";
+import axios from "axios";
+
+const getUserByID = `#graphql
+  query GetUser ($id: Int!) {
+    getUser(id: $id) {
+      id
+      name
+      email
+      birthDate
+    }
+  }`;
 
 async function serverRequest(url: string, id: number, token: string) {
   const response = await axios.post(
