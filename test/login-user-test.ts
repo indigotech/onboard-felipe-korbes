@@ -91,8 +91,7 @@ describe("Login authentication tests", function () {
       token
     };
 
-    const userResponse = response.data.data.login;
-    expect(userResponse).to.be.deep.eq(expectedResponse);
+    expect(response.data.data.login).to.be.deep.eq(expectedResponse);
 
     const decodedToken = verifyToken(token);
     const expiration: number = decodedToken.exp - decodedToken.iat;
