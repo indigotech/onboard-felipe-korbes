@@ -41,11 +41,11 @@ describe("User Query Test", function () {
     const token = generateToken(userDB.id, false);
     const userQueryResponse = await serverRequest(url, userDB.id, token);
 
-    const expectedUserDB = {
-      id: userDB?.id,
-      name: userDB?.name,
-      email: userDB?.email,
-      birthDate: userDB?.birthDate
+    const expectedUserDB = userDB && {
+      id: userDB.id,
+      name: userDB.name,
+      email: userDB.email,
+      birthDate: userDB.birthDate
     };
 
     expect(expectedUserDB).to.be.deep.eq(userQueryResponse.data.getUser);
