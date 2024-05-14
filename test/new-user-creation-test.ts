@@ -35,7 +35,6 @@ describe("User creation test", function () {
         email: "mutation@example.com"
       }
     });
-
     const expectedUserDB = {
       id: createdUserDB?.id,
       password: createdUserDB?.password,

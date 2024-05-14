@@ -24,8 +24,8 @@ export const resolvers = {
     hello: () => "Hello world!",
 
     getUser: async (parent: any, args: { id: number }, context: AuthenticationData, info: any) => {
-      const { user, isValidToken } = context;
-      if (!isValidToken) {
+      const { user } = context;
+      if (!user) {
         throw new CustomError(401, "Operação não autorizada");
       }
 

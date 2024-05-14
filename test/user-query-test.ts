@@ -19,7 +19,7 @@ describe("User Query Test", function () {
       }
     });
 
-    const token = generateToken({ id: userDB.id, email: userDB.email }, false);
+    const token = generateToken(userDB.id, false);
     const userQueryResponse = await axios.post(
       url,
       {
@@ -57,7 +57,7 @@ describe("User Query Test", function () {
       }
     });
 
-    const token = generateToken({ id: userDB.id, email: userDB.email }, false);
+    const token = generateToken(userDB.id, false);
     const userQueryResponse = await axios.post(
       url,
       {
@@ -93,7 +93,7 @@ describe("User Query Test", function () {
       }
     });
 
-    const token = generateToken({ id: userDB.id, email: userDB.email }, false);
+    const token = generateToken(userDB.id, false);
     const userQueryResponse = await axios.post(
       url,
       {
@@ -129,7 +129,7 @@ describe("User Query Test", function () {
       }
     });
 
-    const token = generateToken({ id: userDB.id, email: userDB.email }, false);
+    const token = generateToken(userDB.id, false);
     const userQueryResponse = await axios.post(
       url,
       {
