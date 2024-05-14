@@ -19,6 +19,8 @@ export const hashPassword = async (password: string) => {
   return hashedPassword;
 };
 
+export const defaultSearchValue = 10;
+
 export const resolvers = {
   Query: {
     hello: () => "Hello world!",
@@ -44,11 +46,13 @@ export const resolvers = {
 
     getManyUsers: async (parent: any, args: { limit: number }, context: AuthenticationData, info: any) => {
       const { user } = context;
+
       if (!user) {
         throw new CustomError(401, "Operação não autorizada");
       }
+
       return prisma.user.findMany({
-        take: args.limit ?? 10,
+        take: args.limit ?? defaultSearchValue,
         orderBy: {
           name: "asc"
         }
