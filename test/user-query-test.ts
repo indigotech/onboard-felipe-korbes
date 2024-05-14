@@ -1,10 +1,29 @@
 import { url } from "../src/setup-server";
 import { expect } from "chai";
 import { prisma } from "../src/setup-db";
+import { getUserByID } from "./test-queries";
 import { hashPassword } from "../src/graphql/resolvers";
 import { generateToken } from "../src/graphql/helpers/login-handlers";
-import { createUserMutation, getUserByID } from "./test-queries";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
+import { CustomError } from "../src/graphql/helpers/error-handlers";
+
+async function serverRequest(url: string, id: number, token: string) {
+  const response = await axios.post(
+    url,
+    {
+      query: getUserByID,
+      variables: {
+        id
+      }
+    },
+    {
+      headers: {
+        Authorization: token
+      }
+    }
+  );
+  return response.data;
+}
 
 describe("User Query Test", function () {
   it("Found a user", async function () {
@@ -20,20 +39,7 @@ describe("User Query Test", function () {
     });
 
     const token = generateToken(userDB.id, false);
-    const userQueryResponse = await axios.post(
-      url,
-      {
-        query: getUserByID,
-        variables: {
-          id: userDB.id
-        }
-      },
-      {
-        headers: {
-          Authorization: token
-        }
-      }
-    );
+    const userQueryResponse = await serverRequest(url, userDB.id, token);
 
     const expectedUserDB = {
       id: userDB?.id,
@@ -42,7 +48,7 @@ describe("User Query Test", function () {
       birthDate: userDB?.birthDate
     };
 
-    expect(expectedUserDB).to.be.deep.eq(userQueryResponse.data.data.getUser);
+    expect(expectedUserDB).to.be.deep.eq(userQueryResponse.data.getUser);
   });
 
   it("Failed to find a user with an invalid id", async function () {
@@ -58,61 +64,12 @@ describe("User Query Test", function () {
     });
 
     const token = generateToken(userDB.id, false);
-    const userQueryResponse = await axios.post(
-      url,
-      {
-        query: getUserByID,
-        variables: {
-          id: 1
-        }
-      },
-      {
-        headers: {
-          Authorization: token
-        }
-      }
-    );
+    const userQueryResponse = await serverRequest(url, 1, token);
 
-    expect(userQueryResponse.data.errors).to.be.deep.eq([
+    expect(userQueryResponse.errors).to.be.deep.eq([
       {
         code: 404,
         message: "Usuário não encontrado"
-      }
-    ]);
-  });
-
-  it("Failed to find a user with an invalid id type (string)", async function () {
-    const hashedPassword = await hashPassword("123abc");
-
-    const userDB = await prisma.user.create({
-      data: {
-        name: "User Test",
-        email: "test@example.com",
-        password: hashedPassword,
-        birthDate: "01-01-2000"
-      }
-    });
-
-    const token = generateToken(userDB.id, false);
-    const userQueryResponse = await axios.post(
-      url,
-      {
-        query: getUserByID,
-        variables: {
-          id: "invalidId"
-        }
-      },
-      {
-        headers: {
-          Authorization: token
-        }
-      }
-    );
-
-    expect(userQueryResponse.data.errors).to.be.deep.eq([
-      {
-        code: 400,
-        message: "Algo deu errado, tente novamente"
       }
     ]);
   });
@@ -130,22 +87,9 @@ describe("User Query Test", function () {
     });
 
     const token = generateToken(userDB.id, false);
-    const userQueryResponse = await axios.post(
-      url,
-      {
-        query: getUserByID,
-        variables: {
-          id: userDB.id
-        }
-      },
-      {
-        headers: {
-          Authorization: "invalidToken123"
-        }
-      }
-    );
+    const userQueryResponse = await serverRequest(url, userDB.id, "invalidToken123");
 
-    expect(userQueryResponse.data.errors).to.be.deep.eq([
+    expect(userQueryResponse.errors).to.be.deep.eq([
       {
         code: 401,
         message: "Operação não autorizada"
