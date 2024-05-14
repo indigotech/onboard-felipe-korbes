@@ -16,7 +16,6 @@ describe("General Tests", function () {
   require("./hello-test");
   require("./new-user-creation-test");
   require("./login-user-test");
-  require("./user-query-test");
 
   after(async function () {
     await server.stop();

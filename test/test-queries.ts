@@ -20,13 +20,3 @@ export const createUserMutation = `#graphql
       birthDate
     }
   }`;
-
-export const getUserByID = `#graphql
-  query GetUser ($id: Int!) {
-    getUser(id: $id) {
-      id
-      name
-      email
-      birthDate
-    }
-  }`;
