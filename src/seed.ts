@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { prisma } from "./setup-db";
 import { hashPassword } from "./graphql/resolvers";
-import { setupDatabase } from "./setup-db";
 
 interface userSeedInfo {
   name: string;
@@ -42,5 +41,10 @@ async function seed() {
   });
 }
 
-setupDatabase();
-seed();
+export async function populateDatabase(limit?: number) {
+  const USERS: userSeedInfo[] = faker.helpers.multiple(createRandomUser, {
+    count: limit ?? 5
+  });
+
+  await seed(USERS);
+}
