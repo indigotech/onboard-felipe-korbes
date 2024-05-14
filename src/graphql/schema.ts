@@ -1,6 +1,7 @@
 export const typeDefs = `#graphql
   type Query {
     hello: String
+    getUser(id: Int!): User!
   }
 
   type Mutation {

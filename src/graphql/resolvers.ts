@@ -21,7 +21,26 @@ export const hashPassword = async (password: string) => {
 
 export const resolvers = {
   Query: {
-    hello: () => "Hello world!"
+    hello: () => "Hello world!",
+
+    getUser: async (parent: any, args: { id: number }, context: AuthenticationData, info: any) => {
+      const { user, isValidToken } = context;
+      if (!isValidToken) {
+        throw new CustomError(401, "Operação não autorizada");
+      }
+
+      const userDB = await prisma.user.findUnique({
+        where: {
+          id: args.id
+        }
+      });
+
+      if (userDB !== null) {
+        return userDB;
+      } else {
+        throw new CustomError(404, "Usuário não encontrado");
+      }
+    }
   },
 
   Mutation: {
