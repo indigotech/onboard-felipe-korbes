@@ -1,6 +1,7 @@
 import { GraphQLFormattedError } from "graphql";
 import { unwrapResolverError } from "@apollo/server/errors";
-import { prisma } from "../setup-db";
+import { prisma } from "../../setup-db";
+import bcrypt from "bcrypt";
 
 export class CustomError extends Error {
   code: number;
@@ -24,8 +25,7 @@ export const formatError = (formattedError: GraphQLFormattedError, error: unknow
   } else {
     return {
       code: 400,
-      message: "Something went wrong, try again",
-      additionalInfo: null
+      message: "Something went wrong, try again"
     };
   }
 };
@@ -65,14 +65,14 @@ export function isValidYear(dateInput: string): void {
   }
 }
 
-export async function invalidEmail(email: string) {
+export async function isValidEmail(email: string) {
   const user = await prisma.user.findUnique({
     where: {
       email: email
     }
   });
 
-  if (user?.email) {
+  if (user?.email === email) {
     throw new CustomError(400, "Email already taken, please use a different email");
   }
 }
