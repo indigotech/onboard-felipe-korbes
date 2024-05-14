@@ -34,66 +34,7 @@ Once you have you environments setup, you can run the command below
 npm start
 ```
 
-This command will start the Apollo server on port 4000. From here on out you can add other users in the database as you see fit using the Apollo Server on your browser throgh the mutation implemented in the resolvers. The query and mutation you can run are:
-
-```graphql
-query Greeting {
-    hello
-}
-
-query getUserByID{
-  getUser(id: Int!) {
-    id
-    name
-    email
-    birthDate
-  }
-}
-
-mutation Login {
-  login(data: {
-    email: String!,
-    password: String!,
-    rememberMe: Boolean
-  }) {
-    user {
-      id
-      name
-      email
-      birthDate
-    }
-    token
-  }
-}
-
-mutation CreateNewUser{
-  createUser(data: {
-    name: String!,
-    email: String!,
-    password: String!,
-    birthDate: String!
-  }) {
-    id
-    name
-    email
-    birthDate
-  }
-}
-
-mutation newUser {
-  createUser(data: {
-    name: String!,
-    email: String!,
-    password: String!,
-    birthDate: String!
-  }) {
-    id
-    name
-    email
-    birthDate
-  }
-}
-```
+This command will start the Apollo server on port 4000. From here on out you can add other users in the database as you see fit using the Apollo Server on your browser throgh the mutation implemented in the resolvers.
 
 Also, there are several other script commands that have been implemented in order to run the tests, run the server with the test database and open the prisma studio with the test database, some of these commands with their explanation can be seen below.
 
