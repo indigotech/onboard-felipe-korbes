@@ -1,8 +1,9 @@
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { context } from "./graphql/helpers/authentication-handler";
 import { typeDefs } from "./graphql/schema";
 import { resolvers } from "./graphql/resolvers";
 import { formatError } from "./graphql/helpers/error-handlers";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
 
 export let server: ApolloServer;
 export let url: string;
@@ -17,7 +18,8 @@ export async function setupServer() {
   });
 
   const { url: getUrl } = await startStandaloneServer(server, {
-    listen: { port: parseInt(process.env.PORT ?? "4002") }
+    listen: { port: parseInt(process.env.PORT ?? "4002") },
+    context
   });
 
   url = getUrl;

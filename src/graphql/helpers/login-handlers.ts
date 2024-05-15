@@ -1,5 +1,5 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { prisma } from "../../setup-db";
 import { CustomError } from "./error-handlers";
 
@@ -21,13 +21,6 @@ export async function loginUser(email: string, plaintextPassword: string) {
   } else {
     throw new CustomError(400, `Usuário com email ${email} não encontrado`);
   }
-}
-
-interface UserToken {
-  id: number;
-  name: string;
-  email: string;
-  birthDate: string | null;
 }
 
 export const longExpiration = "604800";

@@ -1,9 +1,9 @@
 import { url } from "../src/setup-server";
 import { prisma } from "../src/setup-db";
-import { verifyToken } from "./helpers/helpers";
-import { hashPassword } from "../src/graphql/resolvers";
 import { expect } from "chai";
-import { loginUserMutation } from "./helpers/test-queries";
+import { verifyToken } from "../src/graphql/helpers/authentication-handler";
+import { hashPassword } from "../src/graphql/resolvers";
+import { loginUserMutation } from "./test-queries";
 import axios from "axios";
 import { longExpiration, shortExpiration } from "../src/graphql/helpers/login-handlers";
 
@@ -47,12 +47,8 @@ describe("Login authentication tests", function () {
 
     const decodedToken = verifyToken(token);
 
-    const expectedTokenResponse = {
-      id: decodedToken.id
-    };
-
-    const expiration: number = decodedToken.exp - decodedToken.iat;
-    expect(decodedToken).to.include(expectedTokenResponse);
+    const expiration: number = decodedToken ? decodedToken.exp - decodedToken.iat : -1;
+    expect(decodedToken).to.include({ id: decodedToken?.id });
     expect(expiration).to.be.eq(parseInt(longExpiration));
   });
 
@@ -93,12 +89,9 @@ describe("Login authentication tests", function () {
     expect(response.data.data.login).to.be.deep.eq(expectedResponse);
 
     const decodedToken = verifyToken(token);
-    const expiration: number = decodedToken.exp - decodedToken.iat;
+    const expiration: number = decodedToken ? decodedToken.exp - decodedToken.iat : -1;
 
-    const expectedTokenResponse = {
-      id: decodedToken.id
-    };
-    expect(decodedToken).to.include(expectedTokenResponse);
+    expect(decodedToken).to.include({ id: decodedToken?.id });
     expect(expiration).to.be.eq(parseInt(shortExpiration));
   });
 

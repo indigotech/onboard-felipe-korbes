@@ -1,5 +1,5 @@
-import { setupDatabase } from "./setup-db";
 import { setupServer } from "./setup-server";
+import { setupDatabase } from "./setup-db";
 
 export async function setup() {
   await setupDatabase();

@@ -1,7 +1,15 @@
 import { prisma } from "../setup-db";
+import { AuthenticationData } from "./helpers/authentication-handler";
 import { UserInput, LoginInput } from "./schema";
 import { generateToken, loginUser } from "./helpers/login-handlers";
-import { hasLettersAndNumbers, isValidEmail, isValidDate, isValidYear, passwordLenght } from "./helpers/error-handlers";
+import {
+  hasLettersAndNumbers,
+  isValidEmail,
+  isValidDate,
+  isValidYear,
+  passwordLenght,
+  CustomError
+} from "./helpers/error-handlers";
 import bcrypt from "bcrypt";
 
 export const hashPassword = async (password: string) => {
@@ -17,9 +25,13 @@ export const resolvers = {
   },
 
   Mutation: {
-    createUser: async (parent: any, args: { data: UserInput }, context: any, info: any) => {
+    createUser: async (parent: any, args: { data: UserInput }, context: AuthenticationData, info: any) => {
       const { data } = args;
 
+      const { user } = context;
+      if (!user) {
+        throw new CustomError(401, "Operação não autorizada");
+      }
       passwordLenght(data.password);
       hasLettersAndNumbers(data.password);
       isValidDate(data.birthDate);
