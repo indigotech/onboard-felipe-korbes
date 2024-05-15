@@ -2,13 +2,13 @@ import { faker } from "@faker-js/faker";
 import { prisma } from "./setup-db";
 import { hashPassword } from "./graphql/resolvers";
 
-export interface userSeedInfo {
+export interface UserSeedInfo {
   name: string;
   email: string;
   password: string;
   birthDate: string;
 }
-export function createRandomUser(): userSeedInfo {
+export function createRandomUser(): UserSeedInfo {
   return {
     password: faker.internet.password(),
     email: faker.internet.email(),
@@ -21,11 +21,11 @@ export function createRandomUser(): userSeedInfo {
 }
 
 export async function userSeed(limit: number) {
-  const USERS: userSeedInfo[] = faker.helpers.multiple(createRandomUser, {
+  const users: UserSeedInfo[] = faker.helpers.multiple(createRandomUser, {
     count: limit
   });
   const usersWithHashedPasswords = await Promise.all(
-    USERS.map(async (user) => {
+    users.map(async (user) => {
       const hashedPassword = await hashPassword(user.password);
       return {
         ...user,
