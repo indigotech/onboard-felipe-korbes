@@ -19,8 +19,6 @@ export const hashPassword = async (password: string) => {
   return hashedPassword;
 };
 
-export const defaultSearchValue = 10;
-
 export const resolvers = {
   Query: {
     hello: () => "Hello world!",
@@ -52,7 +50,7 @@ export const resolvers = {
       }
 
       return prisma.user.findMany({
-        take: args.limit ?? defaultSearchValue,
+        take: args.limit,
         orderBy: {
           name: "asc"
         }
