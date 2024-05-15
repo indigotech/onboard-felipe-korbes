@@ -9,7 +9,7 @@ describe("Address Tests", function () {
         email: "test@example.com",
         password: "123abc",
         birthDate: "01-01-2000",
-        address: {
+        addresses: {
           create: [
             {
               zipCode: 12345678,
@@ -30,16 +30,14 @@ describe("Address Tests", function () {
       }
     });
 
-    const address = await prisma.address.findMany({
+    const addresses = await prisma.address.findMany({
       where: {
         userID: userDB.id
       }
     });
 
-    expect(address.length).to.equal(2);
-
     const expectedAddress1 = {
-      id: address[0].id,
+      id: addresses[0].id,
       zipCode: 12345678,
       street: "Street 1",
       complement: null,
@@ -51,7 +49,7 @@ describe("Address Tests", function () {
     };
 
     const expectedAddress2 = {
-      id: address[1].id,
+      id: addresses[1].id,
       zipCode: 12345678,
       street: "Street 2",
       complement: null,
@@ -62,8 +60,7 @@ describe("Address Tests", function () {
       userID: userDB.id
     };
 
-    expect(address[0]).to.be.deep.eq(expectedAddress1);
-    expect(address[1]).to.be.deep.eq(expectedAddress2);
+    expect(addresses).to.be.deep.eq([expectedAddress1, expectedAddress2]);
     await prisma.address.deleteMany({});
   });
 });
