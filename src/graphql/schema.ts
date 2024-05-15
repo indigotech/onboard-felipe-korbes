@@ -10,6 +10,7 @@ export const typeDefs = `#graphql
   type UserPagination {
     totalCount: Int!
     users: [User!]
+    isLastPage: Boolean
   }
 
   type Mutation {

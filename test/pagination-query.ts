@@ -9,6 +9,7 @@ const getManyUsersPagination = `#graphql
   query GetManyUsers ($offset: Int, $limit: Int) {
     getManyUsers(offset: $offset, limit: $limit) {
       totalCount
+      isLastPage
       users {
         id
         name
@@ -78,6 +79,8 @@ describe("Many Users Query Test", function () {
     const secondPageOfUsers = await serverRequest(url, token, 3, 3);
     expect(secondPageOfUsers.data.getManyUsers.users.length).to.be.equal(3);
 
+    expect(secondPageOfUsers.data.getManyUsers.isLastPage).to.be.equal(false);
+
     expect(firstPageOfUsers.data.getManyUsers.users).to.not.deep.equal(secondPageOfUsers.data.getManyUsers.users);
 
     let isAscending = false;
@@ -95,7 +98,10 @@ describe("Many Users Query Test", function () {
         isAscending = true;
       }
     }
+
     expect(isAscending).to.be.true;
+    const thirdPageOfUsers = await serverRequest(url, token, 3, 6);
+    expect(thirdPageOfUsers.data.getManyUsers.isLastPage).to.be.equal(true);
 
     expect(firstPageOfUsers.data.getManyUsers.totalCount).to.be.equal(9);
     expect(secondPageOfUsers.data.getManyUsers.totalCount).to.be.equal(9);

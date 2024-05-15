@@ -70,9 +70,15 @@ export const resolvers = {
         }
       });
 
+      let isLastPage = false;
+      if (offset + users.length >= totalCount) {
+        isLastPage = true;
+      }
+
       return {
         totalCount,
-        users
+        users,
+        isLastPage
       };
     }
   },
