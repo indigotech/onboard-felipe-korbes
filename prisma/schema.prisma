@@ -18,6 +18,20 @@ model User {
   password  String   
   email     String   @unique
   name      String
+  address   Address[]
   birthDate String?
   age       Int?
+}
+
+model Address {
+  id           Int @id @default(autoincrement())
+  zipCode      Int
+  street       String
+  streetNumber Int
+  complement   String?
+  neighborhood String?
+  city         String
+  state        String
+  user         User @relation(fields: [userID], references: [id])
+  userID       Int
 }
