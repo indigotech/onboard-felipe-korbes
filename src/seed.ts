@@ -26,18 +26,20 @@ const USERS: userSeedInfo[] = faker.helpers.multiple(createRandomUser, {
 });
 
 async function seed() {
-  console.log("Seeding database...");
-  for (const user of USERS) {
-    const hashedPassword = await hashPassword(user.password);
-    await prisma.user.create({
-      data: {
-        name: user.name,
-        email: user.email,
-        password: hashedPassword,
-        birthDate: user.birthDate
-      }
-    });
-  }
+  const usersWithHashedPasswords = await Promise.all(
+    USERS.map(async (user) => {
+      const hashedPassword = await hashPassword(user.password);
+      return {
+        ...user,
+        password: hashedPassword
+      };
+    })
+  );
+
+  await prisma.user.createMany({
+    data: usersWithHashedPasswords,
+    skipDuplicates: true
+  });
 }
 
 setupDatabase();
