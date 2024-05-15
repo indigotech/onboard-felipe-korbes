@@ -1,8 +1,4 @@
-import { url } from "../src/setup-server";
 import { expect } from "chai";
-import { userSeed } from "../src/user-seed";
-import { generateToken } from "../src/graphql/helpers/login-handlers";
-import { defaultSearchValue } from "../src/graphql/resolvers";
 import { prisma } from "../src/setup-db";
 
 describe("Address Tests", function () {
