@@ -7,4 +7,4 @@ async function populateDatabase(limit: number) {
   await userSeed(limit);
 }
 
-populateDatabase(15);
+populateDatabase(30);
