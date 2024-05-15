@@ -18,6 +18,7 @@ describe("General Tests", function () {
   require("./login-user-test");
   require("./user-query-test");
   require("./pagination-query");
+  require("./user-address-test");
 
   after(async function () {
     await server.stop();
