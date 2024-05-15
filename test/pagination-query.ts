@@ -141,7 +141,7 @@ describe("Pagination Test", function () {
     ];
 
     const token = generateToken(1, false);
-    const userQueryResponse = await serverRequest(url, token, 3);
+    const userQueryResponse = await serverRequest({ url, token, limit: 3 });
     expect(userQueryResponse.data.getManyUsers.users).to.be.deep.eq(expectedUsers);
 
     await prisma.address.deleteMany({});
@@ -167,16 +167,16 @@ describe("Pagination Test", function () {
     });
 
     const expectedUsers = [
-      { id: 1, name: "User 1", email: "user1@example.com" },
-      { id: 10, name: "User 10", email: "user10@example.com" },
-      { id: 11, name: "User 11", email: "user11@example.com" },
-      { id: 2, name: "User 2", email: "user2@example.com" },
-      { id: 3, name: "User 3", email: "user3@example.com" },
-      { id: 4, name: "User 4", email: "user4@example.com" },
-      { id: 5, name: "User 5", email: "user5@example.com" },
-      { id: 6, name: "User 6", email: "user6@example.com" },
-      { id: 7, name: "User 7", email: "user7@example.com" },
-      { id: 8, name: "User 8", email: "user8@example.com" }
+      { id: 1, name: "User 1", email: "user1@example.com", addresses: [] },
+      { id: 10, name: "User 10", email: "user10@example.com", addresses: [] },
+      { id: 11, name: "User 11", email: "user11@example.com", addresses: [] },
+      { id: 2, name: "User 2", email: "user2@example.com", addresses: [] },
+      { id: 3, name: "User 3", email: "user3@example.com", addresses: [] },
+      { id: 4, name: "User 4", email: "user4@example.com", addresses: [] },
+      { id: 5, name: "User 5", email: "user5@example.com", addresses: [] },
+      { id: 6, name: "User 6", email: "user6@example.com", addresses: [] },
+      { id: 7, name: "User 7", email: "user7@example.com", addresses: [] },
+      { id: 8, name: "User 8", email: "user8@example.com", addresses: [] }
     ];
 
     const token = generateToken(1, false);
@@ -262,8 +262,8 @@ describe("Pagination Test", function () {
     const lastPageOfUsers = await serverRequest({ url, token, limit: 3, offset: 3 });
 
     const expectedUsers = [
-      { id: 4, name: "User 4", email: "user4@example.com" },
-      { id: 5, name: "User 5", email: "user5@example.com" }
+      { id: 4, name: "User 4", email: "user4@example.com", addresses: [] },
+      { id: 5, name: "User 5", email: "user5@example.com", addresses: [] }
     ];
 
     expect(lastPageOfUsers.data.getManyUsers.hasMoreUsers).to.be.equal(false);
