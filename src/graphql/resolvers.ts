@@ -74,10 +74,7 @@ export const resolvers = {
         }
       });
 
-      let hasMoreUsers = false;
-      if (offset + users.length >= totalCount) {
-        hasMoreUsers = true;
-      }
+      const hasMoreUsers = offset + users.length < totalCount;
 
       return {
         totalCount,
