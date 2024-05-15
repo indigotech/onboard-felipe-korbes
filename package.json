@@ -9,13 +9,15 @@
     "start": "dotenv -e .env -- ts-node src/index.ts",
     "startTest": "dotenv -e test.env -- ts-node src/index.ts",
     "studioTest": "dotenv -e test.env -- prisma studio",
-    "test": "dotenv -e test.env -- mocha --require ts-node/register test/test.ts"
+    "test": "dotenv -e test.env -- mocha --require ts-node/register test/test.ts",
+    "seeds": "dotenv -e test.env -- ts-node src/seed.ts"
   },
   "keywords": [],
   "author": "Felipe Korbes",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "9.1.1",
+    "@faker-js/faker": "8.4.1",
     "@types/jsonwebtoken": "9.0.6",
     "@types/mocha": "10.0.6",
     "@types/node": "20.12.8",
