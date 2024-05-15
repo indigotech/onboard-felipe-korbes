@@ -30,6 +30,17 @@ export const typeDefs = `#graphql
     name: String!
     email: String!
     birthDate: String!
+    addresses: [Address]
+  }
+
+  type Address {
+    zipCode: Int!
+    street: String!
+    streetNumber: Int!
+    city: String!
+    state: String!
+    complement: String
+    neighborhood: String
   }
 
   input LoginInput {

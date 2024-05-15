@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  password  String   
-  email     String   @unique
-  name      String
-  address   Address[]
-  birthDate String?
-  age       Int?
+  id          Int      @id @default(autoincrement())
+  password    String   
+  email       String   @unique
+  name        String
+  addresses   Address[]
+  birthDate   String?
+  age         Int?
 }
 
 model Address {
