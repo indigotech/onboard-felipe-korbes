@@ -2,7 +2,7 @@ import { url } from "../src/setup-server";
 import { expect } from "chai";
 import { userSeed } from "../src/user-seed";
 import { generateToken } from "../src/graphql/helpers/login-handlers";
-import { defaultSearchValue } from "../src/graphql/resolvers";
+import { defaultLimit } from "../src/graphql/schema";
 import axios from "axios";
 
 const getManyUsersPagination = `#graphql 
@@ -48,12 +48,12 @@ describe("Many Users Query Test", function () {
   });
 
   it("Tried to find users without giving a limit", async function () {
-    await userSeed(defaultSearchValue + 5);
+    await userSeed(defaultLimit + 5);
 
     const token = generateToken(1, false);
 
     const userQueryResponse = await serverRequest(url, token);
-    expect(userQueryResponse.data.getManyUsers.users.length).to.be.equal(defaultSearchValue);
+    expect(userQueryResponse.data.getManyUsers.users.length).to.be.equal(defaultLimit);
   });
 
   it("Tried to find user with an invalid token", async function () {

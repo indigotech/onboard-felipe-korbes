@@ -64,7 +64,7 @@ export const resolvers = {
 
       const users = await prisma.user.findMany({
         skip: offset,
-        take: args.limit ?? defaultSearchValue,
+        take: args.limit,
         orderBy: {
           name: "asc"
         }
