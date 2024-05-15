@@ -12,6 +12,13 @@ const getUserByID = `#graphql
       name
       email
       birthDate
+      addresses {
+        street
+        streetNumber
+        city
+        zipCode
+        state
+    }
     }
   }`;
 
@@ -53,10 +60,53 @@ describe("User Query Test", function () {
       id: userDB.id,
       name: userDB.name,
       email: userDB.email,
-      birthDate: userDB.birthDate
+      birthDate: userDB.birthDate,
+      addresses: []
     };
 
     expect(userQueryResponse.data.getUser).to.be.deep.eq(expectedUserDB);
+  });
+
+  it("Found a user with an address", async function () {
+    const userDB = await prisma.user.create({
+      data: {
+        name: "User Test",
+        email: "test@example.com",
+        password: "123abc",
+        birthDate: "01-01-2000",
+        addresses: {
+          create: [
+            {
+              zipCode: 12345678,
+              street: "Street 1",
+              streetNumber: 1,
+              city: "City 1",
+              state: "State 1"
+            }
+          ]
+        }
+      }
+    });
+    const address = await prisma.address.findMany({
+      where: {
+        userID: userDB.id
+      }
+    });
+
+    const expectedAddress1 = {
+      id: address[0].id,
+      zipCode: 12345678,
+      street: "Street 1",
+      complement: null,
+      neighborhood: null,
+      streetNumber: 1,
+      city: "City 1",
+      state: "State 1",
+      userID: userDB.id
+    };
+
+    expect(address[0]).to.be.deep.eq(expectedAddress1);
+    await prisma.address.deleteMany({});
   });
 
   it("Failed to find a user with an invalid id", async function () {
