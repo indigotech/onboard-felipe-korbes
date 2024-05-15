@@ -42,19 +42,38 @@ export const resolvers = {
       }
     },
 
-    getManyUsers: async (parent: any, args: { limit: number }, context: AuthenticationData, info: any) => {
+    getManyUsers: async (
+      parent: any,
+      args: { offset?: number; limit: number },
+      context: AuthenticationData,
+      info: any
+    ) => {
       const { user } = context;
 
       if (!user) {
         throw new CustomError(401, "Operação não autorizada");
       }
 
-      return prisma.user.findMany({
-        take: args.limit,
+      const { offset = 0, limit } = args;
+
+      const totalCount = await prisma.user.count();
+
+      if (offset < 0 || limit < 1) {
+        throw new CustomError(400, "Offset e/ou limite precisam ser valores positivos.");
+      }
+
+      const users = await prisma.user.findMany({
+        skip: offset,
+        take: args.limit ?? defaultSearchValue,
         orderBy: {
           name: "asc"
         }
       });
+
+      return {
+        totalCount,
+        users
+      };
     }
   },
 
