@@ -56,11 +56,15 @@ export const resolvers = {
 
       const { offset = 0, limit } = args;
 
-      const totalCount = await prisma.user.count();
-
       if (offset < 0 || limit < 1) {
-        throw new CustomError(400, "Offset e/ou limite precisam ser valores positivos.");
+        throw new CustomError(
+          400,
+          "Algo deu errado, tente novamente",
+          "Offset e/ou limite precisam ser valores positivos."
+        );
       }
+
+      const totalCount = await prisma.user.count();
 
       const users = await prisma.user.findMany({
         skip: offset,
@@ -70,15 +74,15 @@ export const resolvers = {
         }
       });
 
-      let isLastPage = false;
+      let hasMoreUsers = false;
       if (offset + users.length >= totalCount) {
-        isLastPage = true;
+        hasMoreUsers = true;
       }
 
       return {
         totalCount,
         users,
-        isLastPage
+        hasMoreUsers
       };
     }
   },

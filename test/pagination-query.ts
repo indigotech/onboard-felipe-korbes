@@ -1,15 +1,16 @@
 import { url } from "../src/setup-server";
 import { expect } from "chai";
+import { prisma } from "../src/setup-db";
 import { userSeed } from "../src/user-seed";
-import { generateToken } from "../src/graphql/helpers/login-handlers";
 import { defaultLimit } from "../src/graphql/schema";
+import { generateToken } from "../src/graphql/helpers/login-handlers";
 import axios from "axios";
 
 const getManyUsersPagination = `#graphql 
   query GetManyUsers ($offset: Int, $limit: Int) {
     getManyUsers(offset: $offset, limit: $limit) {
       totalCount
-      isLastPage
+      hasMoreUsers
       users {
         id
         name
@@ -39,12 +40,29 @@ async function serverRequest(url: string, token: string, limit?: number, offset?
 
 describe("Many Users Query Test", function () {
   it("Tried to find many users in the database", async function () {
-    await userSeed(7);
+    const usersDB = [
+      { id: 1, name: "User 1", email: "user1@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 2, name: "User 2", email: "user2@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 3, name: "User 3", email: "user3@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 4, name: "User 4", email: "user4@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 5, name: "User 5", email: "user5@example.com", password: "123abc", birthDate: "01-01-2000" }
+    ];
+
+    await prisma.user.createMany({
+      data: usersDB
+    });
+
+    const expectedUsers = [
+      { id: 1, name: "User 1", email: "user1@example.com" },
+      { id: 2, name: "User 2", email: "user2@example.com" },
+      { id: 3, name: "User 3", email: "user3@example.com" },
+      { id: 4, name: "User 4", email: "user4@example.com" },
+      { id: 5, name: "User 5", email: "user5@example.com" }
+    ];
 
     const token = generateToken(1, false);
-
     const userQueryResponse = await serverRequest(url, token, 5);
-    expect(userQueryResponse.data.getManyUsers.users.length).to.be.equal(5);
+    expect(userQueryResponse.data.getManyUsers.users).to.be.deep.eq(expectedUsers);
   });
 
   it("Tried to find users without giving a limit", async function () {
@@ -68,43 +86,95 @@ describe("Many Users Query Test", function () {
     ]);
   });
 
-  it("Paginated between users", async function () {
-    await userSeed(9);
+  it("Found the first page of users correctly", async function () {
+    const usersDB = [
+      { id: 1, name: "User 1", email: "user1@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 2, name: "User 2", email: "user2@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 3, name: "User 3", email: "user3@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 4, name: "User 4", email: "user4@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 5, name: "User 5", email: "user5@example.com", password: "123abc", birthDate: "01-01-2000" }
+    ];
+
+    await prisma.user.createMany({
+      data: usersDB
+    });
+
+    const expectedUsers = [
+      { id: 1, name: "User 1", email: "user1@example.com" },
+      { id: 2, name: "User 2", email: "user2@example.com" },
+      { id: 3, name: "User 3", email: "user3@example.com" }
+    ];
 
     const token = generateToken(1, false);
 
     const firstPageOfUsers = await serverRequest(url, token, 3, 0);
-    expect(firstPageOfUsers.data.getManyUsers.users.length).to.be.equal(3);
+    expect(firstPageOfUsers.data.getManyUsers.users).to.be.deep.eq(expectedUsers);
+  });
 
+  it("Found the second page of users correctly", async function () {
+    const usersDB = [
+      { id: 1, name: "User 1", email: "user1@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 2, name: "User 2", email: "user2@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 3, name: "User 3", email: "user3@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 4, name: "User 4", email: "user4@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 5, name: "User 5", email: "user5@example.com", password: "123abc", birthDate: "01-01-2000" }
+    ];
+
+    await prisma.user.createMany({
+      data: usersDB
+    });
+
+    const expectedUsers = [
+      { id: 4, name: "User 4", email: "user4@example.com" },
+      { id: 5, name: "User 5", email: "user5@example.com" }
+    ];
+
+    const token = generateToken(1, false);
     const secondPageOfUsers = await serverRequest(url, token, 3, 3);
-    expect(secondPageOfUsers.data.getManyUsers.users.length).to.be.equal(3);
+    expect(secondPageOfUsers.data.getManyUsers.users).to.be.deep.eq(expectedUsers);
+  });
 
-    expect(secondPageOfUsers.data.getManyUsers.isLastPage).to.be.equal(false);
+  it("Shold return the last page correctly", async function () {
+    const usersDB = [
+      { id: 1, name: "User 1", email: "user1@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 2, name: "User 2", email: "user2@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 3, name: "User 3", email: "user3@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 4, name: "User 4", email: "user4@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 5, name: "User 5", email: "user5@example.com", password: "123abc", birthDate: "01-01-2000" }
+    ];
 
-    expect(firstPageOfUsers.data.getManyUsers.users).to.not.deep.equal(secondPageOfUsers.data.getManyUsers.users);
+    await prisma.user.createMany({
+      data: usersDB
+    });
 
-    let isAscending = false;
-    for (let i = 0; i < firstPageOfUsers.data.getManyUsers.users.length - 1; i++) {
-      if (
-        firstPageOfUsers.data.getManyUsers.users[i].name.localeCompare(
-          firstPageOfUsers.data.getManyUsers.users[i + 1].name
-        ) > 0 ||
-        secondPageOfUsers.data.getManyUsers.users[i].name.localeCompare(
-          secondPageOfUsers.data.getManyUsers.users[i + 1].name
-        ) > 0
-      ) {
-        break;
-      } else {
-        isAscending = true;
-      }
-    }
+    const token = generateToken(1, false);
+    const lastPageOfUsers = await serverRequest(url, token, 3, 6);
 
-    expect(isAscending).to.be.true;
-    const thirdPageOfUsers = await serverRequest(url, token, 3, 6);
-    expect(thirdPageOfUsers.data.getManyUsers.isLastPage).to.be.equal(true);
+    expect(lastPageOfUsers.data.getManyUsers.hasMoreUsers).to.be.equal(true);
+  });
 
-    expect(firstPageOfUsers.data.getManyUsers.totalCount).to.be.equal(9);
-    expect(secondPageOfUsers.data.getManyUsers.totalCount).to.be.equal(9);
+  it("Shold return users in alphabetical order", async function () {
+    const usersDB = [
+      { id: 4, name: "Davi", email: "user4@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 2, name: "Bruno", email: "user2@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 3, name: "Caio", email: "user3@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 5, name: "Eduardo", email: "user5@example.com", password: "123abc", birthDate: "01-01-2000" },
+      { id: 1, name: "Alan", email: "user1@example.com", password: "123abc", birthDate: "01-01-2000" }
+    ];
+
+    await prisma.user.createMany({
+      data: usersDB
+    });
+
+    const expectedUsers = [
+      { id: 2, name: "Bruno", email: "user2@example.com" },
+      { id: 3, name: "Caio", email: "user3@example.com" },
+      { id: 4, name: "Davi", email: "user4@example.com" }
+    ];
+
+    const token = generateToken(1, false);
+    const orderedUsers = await serverRequest(url, token, 3, 1);
+    expect(orderedUsers.data.getManyUsers.users).to.be.deep.eq(expectedUsers);
   });
 
   it("Failed to find users with a negative limit", async function () {
@@ -114,7 +184,8 @@ describe("Many Users Query Test", function () {
     expect(userQueryResponse.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Offset e/ou limite precisam ser valores positivos."
+        message: "Algo deu errado, tente novamente",
+        additionalInfo: "Offset e/ou limite precisam ser valores positivos."
       }
     ]);
   });
@@ -126,7 +197,8 @@ describe("Many Users Query Test", function () {
     expect(userQueryResponse.errors).to.be.deep.eq([
       {
         code: 400,
-        message: "Offset e/ou limite precisam ser valores positivos."
+        message: "Algo deu errado, tente novamente",
+        additionalInfo: "Offset e/ou limite precisam ser valores positivos."
       }
     ]);
   });
