@@ -1,7 +1,10 @@
+export const defaultLimit = 10;
+
 export const typeDefs = `#graphql
   type Query {
     hello: String
     getUser(id: Int!): User!
+    getManyUsers(limit: Int = ${defaultLimit}): [User!]! 
   }
 
   type Mutation {

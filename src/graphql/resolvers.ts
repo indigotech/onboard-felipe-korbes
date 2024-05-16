@@ -40,6 +40,21 @@ export const resolvers = {
       } else {
         throw new CustomError(404, "Usuário não encontrado");
       }
+    },
+
+    getManyUsers: async (parent: any, args: { limit: number }, context: AuthenticationData, info: any) => {
+      const { user } = context;
+
+      if (!user) {
+        throw new CustomError(401, "Operação não autorizada");
+      }
+
+      return prisma.user.findMany({
+        take: args.limit,
+        orderBy: {
+          name: "asc"
+        }
+      });
     }
   },
 
