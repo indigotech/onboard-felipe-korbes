@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "migrateServer": "dotenv -e .env -- prisma migrate deploy",
-    "migrateTest": "dotenv -e test.env -- prisma migrate deploy",
+    "migrateServer": "dotenv -e .env prisma migrate dev",
+    "migrateTest": "dotenv -e test.env prisma migrate dev",
     "start": "dotenv -e .env -- ts-node src/index.ts",
     "startTest": "dotenv -e test.env -- ts-node src/index.ts",
     "studioTest": "dotenv -e test.env -- prisma studio",
