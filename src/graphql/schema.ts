@@ -4,7 +4,13 @@ export const typeDefs = `#graphql
   type Query {
     hello: String
     getUser(id: Int!): User!
-    getManyUsers(limit: Int = ${defaultLimit}): [User!]! 
+    getManyUsers(offset: Int, limit: Int = ${defaultLimit}): UserPagination!
+  }
+
+  type UserPagination {
+    totalCount: Int!
+    users: [User!]!
+    hasMoreUsers: Boolean
   }
 
   type Mutation {
