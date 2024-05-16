@@ -30,7 +30,7 @@ export const typeDefs = `#graphql
     name: String!
     email: String!
     birthDate: String!
-    addresses: [Address]
+    addresses: [Address]!
   }
 
   type Address {
