@@ -32,6 +32,9 @@ export const resolvers = {
       const userDB = await prisma.user.findUnique({
         where: {
           id: args.id
+        },
+        include: {
+          addresses: true
         }
       });
 
@@ -68,7 +71,10 @@ export const resolvers = {
 
       const users = await prisma.user.findMany({
         skip: offset,
-        take: args.limit,
+        take: limit,
+        include: {
+          addresses: true
+        },
         orderBy: {
           name: "asc"
         }
