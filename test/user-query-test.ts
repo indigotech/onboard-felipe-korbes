@@ -41,6 +41,10 @@ async function serverRequest(url: string, id: number, token: string) {
 }
 
 describe("User Query Test", function () {
+  afterEach(async function () {
+    await prisma.address.deleteMany({});
+  });
+
   it("Found a user", async function () {
     const hashedPassword = await hashPassword("123abc");
 
@@ -106,7 +110,6 @@ describe("User Query Test", function () {
     };
 
     expect(address[0]).to.be.deep.eq(expectedAddress1);
-    await prisma.address.deleteMany({});
   });
 
   it("Failed to find a user with an invalid id", async function () {
